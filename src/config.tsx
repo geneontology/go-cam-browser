@@ -42,7 +42,7 @@ export const config = createConfig<IndexedGoCam>({
       render: (value) => value?.join(", "),
     }),
     goCamField({
-      field: "model_activity_enabled_by_closure_label",
+      field: "model_activity_enabled_by_terms_label",
       label: "Genes",
       facet: "array",
       render: (value) => value?.join(", "),
