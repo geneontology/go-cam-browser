@@ -1,6 +1,7 @@
-import { Image, Text } from "@mantine/core";
+import { Group, Image, Text } from "@mantine/core";
 import logoUrl from "../assets/go-logo.svg";
 import { config } from "../config.tsx";
+import HeaderLinks from "./HeaderLinks.tsx";
 
 const Header: React.FC = () => {
   return (
@@ -16,6 +17,10 @@ const Header: React.FC = () => {
       <Text size="xl" fw={900}>
         {config.title}
       </Text>
+      <div style={{ flexGrow: 1 }} />
+      <Group visibleFrom="sm" gap="xl">
+        <HeaderLinks />
+      </Group>
     </>
   );
 };
