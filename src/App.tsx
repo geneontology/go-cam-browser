@@ -23,6 +23,9 @@ import Header from "./components/Header.tsx";
 import ConfigMenu from "./components/ConfigMenu.tsx";
 import HeaderLinks from "./components/HeaderLinks.tsx";
 import type { IndexedGoCam } from "./types.ts";
+import Footer from "./components/Footer.tsx";
+
+import classes from "./App.module.css";
 
 const HEADER_HEIGHT = 60;
 const NAVBAR_WIDTH = 320;
@@ -125,44 +128,47 @@ function App() {
         </AppShell.Section>
       </AppShell.Navbar>
       <div ref={targetRef} />
-      <AppShell.Main bg="gray.0">
-        <Group align="center" mb="md">
-          <SearchInput onSearch={search} disabled={isIndexing || isPending} />
-          <ConfigMenu
+      <AppShell.Main className={classes.main}>
+        <div className={classes.mainContent}>
+          <Group align="center" mb="md">
+            <SearchInput onSearch={search} disabled={isIndexing || isPending} />
+            <ConfigMenu
+              visibleFields={visibleFields}
+              onToggleField={handleToggleField}
+            />
+          </Group>
+          {isPending && (
+            <Group align="center" gap="sm" mb="md">
+              <Loader size="sm" />
+              <Text>Loading...</Text>
+            </Group>
+          )}
+          {isError && (
+            <Alert color="red" title="Error" mb="md">
+              Something went wrong: {error.message}
+            </Alert>
+          )}
+          {!isPending && !isError && (
+            <Group mb="md" justify="space-between">
+              <Text>
+                Found <b>{matchingIndexes.length ?? 0}</b> GO-CAMs
+              </Text>
+              {Object.keys(activeFilters).length && (
+                <UnstyledButton onClick={clearAllFacets}>
+                  <Text size="sm" c="blue">
+                    Clear all filters
+                  </Text>
+                </UnstyledButton>
+              )}
+            </Group>
+          )}
+          <ResultList
+            data={searchResults}
+            displayIndexes={matchingIndexes}
             visibleFields={visibleFields}
-            onToggleField={handleToggleField}
           />
-        </Group>
-        {isPending && (
-          <Group align="center" gap="sm" mb="md">
-            <Loader size="sm" />
-            <Text>Loading...</Text>
-          </Group>
-        )}
-        {isError && (
-          <Alert color="red" title="Error" mb="md">
-            Something went wrong: {error.message}
-          </Alert>
-        )}
-        {!isPending && !isError && (
-          <Group mb="md" justify="space-between">
-            <Text>
-              Found <b>{matchingIndexes.length ?? 0}</b> GO-CAMs
-            </Text>
-            {Object.keys(activeFilters).length && (
-              <UnstyledButton onClick={clearAllFacets}>
-                <Text size="sm" c="blue">
-                  Clear all filters
-                </Text>
-              </UnstyledButton>
-            )}
-          </Group>
-        )}
-        <ResultList
-          data={searchResults}
-          displayIndexes={matchingIndexes}
-          visibleFields={visibleFields}
-        />
+        </div>
+        <Footer />
       </AppShell.Main>
     </AppShell>
   );

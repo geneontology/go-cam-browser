@@ -1,0 +1,9 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--mantine-color-gray-0);
+}
+
+.mainContent {
+  flex-grow: 1;
+}
