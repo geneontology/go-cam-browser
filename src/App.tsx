@@ -1,13 +1,14 @@
 import { useDisclosure } from "@mantine/hooks";
 import {
+  Alert,
   AppShell,
   Burger,
+  Divider,
   Group,
-  Text,
   Loader,
-  Alert,
   ScrollArea,
   Stack,
+  Text,
   UnstyledButton,
 } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
@@ -20,6 +21,7 @@ import useQueryData from "./hooks/useQueryData.ts";
 import SearchInput from "./components/SearchInput.tsx";
 import Header from "./components/Header.tsx";
 import ConfigMenu from "./components/ConfigMenu.tsx";
+import HeaderLinks from "./components/HeaderLinks.tsx";
 import type { IndexedGoCam } from "./types.ts";
 
 const HEADER_HEIGHT = 60;
@@ -101,6 +103,10 @@ function App() {
       </AppShell.Header>
       <AppShell.Navbar p="md">
         <AppShell.Section grow component={ScrollAreaWrapper}>
+          <Stack gap="md" hiddenFrom="sm">
+            <HeaderLinks />
+            <Divider />
+          </Stack>
           <Stack gap="md">
             {config.fields
               .filter((field) => visibleFields.includes(field.field))

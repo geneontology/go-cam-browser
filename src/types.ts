@@ -33,6 +33,11 @@ export interface AppConfig<
   title: string;
   description: string;
   dataUrl: string;
+  headerLinks?: {
+    label: string;
+    href: string;
+    newTab: boolean;
+  }[];
   fields: TFields;
 }
 

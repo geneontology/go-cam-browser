@@ -7,6 +7,23 @@ export const config = createConfig<IndexedGoCam>({
   title: "GO-CAM Browser",
   description: "Search and filter models by multiple criteria",
   dataUrl: "/data.json",
+  headerLinks: [
+    {
+      label: "GO-CAM Overview",
+      href: "https://geneontology.org/docs/gocam-overview/",
+      newTab: true,
+    },
+    {
+      label: "Gene Ontology Home",
+      href: "https://geneontology.org/",
+      newTab: true,
+    },
+    {
+      label: "Help",
+      href: "https://help.geneontology.org/",
+      newTab: true,
+    },
+  ],
   fields: [
     goCamField({
       field: "id",

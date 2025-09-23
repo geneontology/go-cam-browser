@@ -19,7 +19,7 @@ const ResultList: React.FC<ResultListProps> = ({
   const [limit, setLimit] = useState(defaultLimit);
   return (
     <>
-      <SimpleGrid cols={{ base: 1, sm: 2 }}>
+      <SimpleGrid cols={{ base: 1, md: 2 }}>
         {displayIndexes
           .slice(0, limit)
           .map((idx) => data[idx])
@@ -50,14 +50,6 @@ const ResultList: React.FC<ResultListProps> = ({
                   </Table.Tbody>
                 </Table>
               </Card.Section>
-              {/*{config.fields*/}
-              {/*  .filter((field) => visibleFields.includes(field.field))*/}
-              {/*  .map((field) => (*/}
-              {/*    <div key={field.field}>*/}
-              {/*      <strong>{field.label}</strong>:{" "}*/}
-              {/*      {field.render(gocam[field.field])}*/}
-              {/*    </div>*/}
-              {/*  ))}*/}
             </Card>
           ))}
       </SimpleGrid>
