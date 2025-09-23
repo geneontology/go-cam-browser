@@ -52,6 +52,82 @@ function extractFacetValues(
   }
 }
 
+// Helper function to apply text filters to data
+function applyTextFilters<TData>(
+  data: TData[],
+  textFilters: [string, TextFilter][],
+  facetFieldMap: Record<string, FieldConfig<TData, keyof TData>>,
+  excludeField?: string,
+): number[] {
+  let filteredIndexes = data.map((_, idx) => idx);
+
+  for (const [filterField, filter] of textFilters) {
+    if (excludeField && filterField === excludeField) {
+      continue; // Skip excluded field
+    }
+
+    const fieldCfg = facetFieldMap[filterField];
+    if (!fieldCfg) {
+      continue;
+    }
+
+    filteredIndexes = filteredIndexes.filter((idx) => {
+      const item = data[idx];
+      const rawValue = item[fieldCfg.field];
+      const values = extractFacetValues(rawValue, fieldCfg.facet);
+
+      if (fieldCfg.facet === "array") {
+        return Array.from(filter.values).every((v) => values.includes(v));
+      } else if (fieldCfg.facet === "text") {
+        const selected = filter.values.values().next().value as string;
+        return values.length === 1 && values[0] === selected;
+      }
+      return true;
+    });
+  }
+
+  return filteredIndexes;
+}
+
+// Helper function to apply numeric filters to data
+function applyNumericFilters<TData>(
+  data: TData[],
+  filteredIndexes: number[],
+  numericFilters: [string, NumericFilter][],
+  facetFieldMap: Record<string, FieldConfig<TData, keyof TData>>,
+  excludeField?: string,
+): number[] {
+  let result = [...filteredIndexes];
+
+  for (const [filterField, filter] of numericFilters) {
+    if (excludeField && filterField === excludeField) {
+      continue; // Skip excluded field
+    }
+
+    const fieldCfg = facetFieldMap[filterField];
+    if (!fieldCfg) {
+      continue;
+    }
+
+    result = result.filter((idx) => {
+      const item = data[idx];
+      const rawValue = item[fieldCfg.field];
+      if (typeof rawValue !== "number") {
+        return false;
+      }
+      if (filter.min != null && rawValue < filter.min) {
+        return false;
+      }
+      if (filter.max != null && rawValue > filter.max) {
+        return false;
+      }
+      return true;
+    });
+  }
+
+  return result;
+}
+
 interface UseFaceterOptions<TData> {
   data: TData[];
   fields: readonly FieldConfig<TData, keyof TData>[];
@@ -103,158 +179,106 @@ export default function useFacets<TData>(
     [activeFilters],
   );
 
-  const textFilterMatchingIndexes = useMemo<number[]>(() => {
-    // No active filters, all match
-    if (textFilters.length === 0) {
-      return data.map((_, idx) => idx);
-    }
-
-    // Apply text filters to data and return matching indexes
-    return data.reduce<number[]>((acc, item, idx) => {
-      for (const [fieldKey, filter] of textFilters) {
-        const fieldCfg = facetFieldMap[fieldKey];
-        if (!fieldCfg) {
-          return acc;
-        }
-        const rawValue = item[fieldCfg.field];
-        const values = extractFacetValues(rawValue, fieldCfg.facet);
-        if (fieldCfg.facet === "array") {
-          const hasAll = Array.from(filter.values).every((v) =>
-            values.includes(v),
-          );
-          if (!hasAll) {
-            return acc;
-          }
-        } else if (fieldCfg.facet === "text") {
-          const selected = filter.values.values().next().value as string;
-          if (values.length !== 1 || values[0] !== selected) {
-            return acc;
-          }
-        }
-      }
-      acc.push(idx);
-      return acc;
-    }, []);
-  }, [textFilters, data, facetFieldMap]);
-
   const textFacets: Record<string, TextFacet> = useMemo(() => {
     const _textFacets: Record<string, TextFacet> = {};
-    for (const idx of textFilterMatchingIndexes) {
-      const item = data[idx];
-      for (const f of facetFields) {
-        const key = f.field as string;
-        const rawValue = item[f.field];
+
+    // For each text/array facet field, calculate counts based on ALL filters applied
+    for (const facetField of facetFields) {
+      if (facetField.facet !== "text" && facetField.facet !== "array") {
+        continue;
+      }
+
+      const key = facetField.field as string;
+
+      // Get indexes that match ALL filters (including current field)
+      let filteredIndexes = applyTextFilters(data, textFilters, facetFieldMap);
+      filteredIndexes = applyNumericFilters(
+        data,
+        filteredIndexes,
+        numericFilters,
+        facetFieldMap,
+      );
+
+      // Count facet values for this field
+      _textFacets[key] = { type: facetField.facet, values: {} };
+      for (const idx of filteredIndexes) {
+        const item = data[idx];
+        const rawValue = item[facetField.field];
         if (rawValue == null) {
           continue;
         }
-        if (f.facet === "text" || f.facet === "array") {
-          if (!(key in _textFacets)) {
-            _textFacets[key] = { type: f.facet, values: {} };
-          }
-          const vals = extractFacetValues(rawValue, f.facet);
-          for (const v of vals) {
-            _textFacets[key].values[v] = (_textFacets[key].values[v] ?? 0) + 1;
-          }
+
+        const vals = extractFacetValues(rawValue, facetField.facet);
+        for (const v of vals) {
+          _textFacets[key].values[v] = (_textFacets[key].values[v] ?? 0) + 1;
         }
       }
     }
+
     return _textFacets;
-  }, [data, facetFields, textFilterMatchingIndexes]);
+  }, [data, facetFields, textFilters, numericFilters, facetFieldMap]);
 
   const numericFacets: Record<string, NumericFacet> = useMemo(() => {
     const _numericFacets: Record<string, NumericFacet> = {};
-    for (const [facetField, facetConfig] of Object.entries(facetFieldMap)) {
-      if (facetConfig.facet !== "numeric") {
+
+    for (const facetField of facetFields) {
+      if (facetField.facet !== "numeric") {
         continue;
       }
-      let partialMatchesIndexes = [...textFilterMatchingIndexes];
-      for (const [filterField, filter] of numericFilters) {
-        if (filterField === facetField) {
-          continue;
-        }
-        const fieldCfg = facetFieldMap[filterField];
-        if (!fieldCfg) {
-          continue;
-        }
-        partialMatchesIndexes = partialMatchesIndexes.filter((idx) => {
-          const item = data[idx];
-          const rawValue = item[fieldCfg.field];
-          if (typeof rawValue !== "number") {
-            return false;
-          }
-          if (filter.min != null && rawValue < filter.min) {
-            return false;
-          }
-          if (filter.max != null && rawValue > filter.max) {
-            return false;
-          }
-          return true;
-        });
-      }
-      for (const idx of partialMatchesIndexes) {
+
+      const key = facetField.field as string;
+
+      // Get indexes that match all filters except the current numeric field
+      let filteredIndexes = applyTextFilters(data, textFilters, facetFieldMap);
+      filteredIndexes = applyNumericFilters(
+        data,
+        filteredIndexes,
+        numericFilters,
+        facetFieldMap,
+        key,
+      );
+
+      // Calculate min/max for this numeric field
+      for (const idx of filteredIndexes) {
         const item = data[idx];
-        const rawValue = item[facetField as keyof TData];
+        const rawValue = item[facetField.field];
         if (typeof rawValue !== "number") {
           continue;
         }
-        if (!(facetField in _numericFacets)) {
-          _numericFacets[facetField] = {
+
+        if (!(key in _numericFacets)) {
+          _numericFacets[key] = {
             type: "numeric",
             values: [rawValue, rawValue],
           };
         } else {
-          const [min, max] = _numericFacets[facetField].values;
+          const [min, max] = _numericFacets[key].values;
           if (rawValue < min) {
-            _numericFacets[facetField].values[0] = rawValue;
+            _numericFacets[key].values[0] = rawValue;
           }
           if (rawValue > max) {
-            _numericFacets[facetField].values[1] = rawValue;
+            _numericFacets[key].values[1] = rawValue;
           }
         }
       }
     }
+
     return _numericFacets;
-  }, [data, facetFieldMap, textFilterMatchingIndexes, numericFilters]);
+  }, [data, facetFields, textFilters, numericFilters, facetFieldMap]);
 
   const facets: Facets = useMemo(() => {
     return { ...textFacets, ...numericFacets };
   }, [textFacets, numericFacets]);
 
   const matchingIndexes = useMemo<number[]>(() => {
-    // No active filters, all match
-    if (Object.keys(activeFilters).length === 0) {
-      return data.map((_, idx) => idx);
-    }
-
-    // Apply numeric filters to the text-filtered indexes
-    return textFilterMatchingIndexes.reduce<number[]>((acc, idx) => {
-      const item = data[idx];
-      for (const [fieldKey, filter] of numericFilters) {
-        const fieldCfg = facetFieldMap[fieldKey];
-        if (!fieldCfg) {
-          return acc;
-        }
-        const rawValue = item[fieldCfg.field];
-        if (typeof rawValue !== "number") {
-          return acc;
-        }
-        if (filter.min != null && rawValue < filter.min) {
-          return acc;
-        }
-        if (filter.max != null && rawValue > filter.max) {
-          return acc;
-        }
-      }
-      acc.push(idx);
-      return acc;
-    }, []);
-  }, [
-    activeFilters,
-    textFilterMatchingIndexes,
-    data,
-    facetFieldMap,
-    numericFilters,
-  ]);
+    const filteredIndexes = applyTextFilters(data, textFilters, facetFieldMap);
+    return applyNumericFilters(
+      data,
+      filteredIndexes,
+      numericFilters,
+      facetFieldMap,
+    );
+  }, [data, textFilters, numericFilters, facetFieldMap]);
 
   const toggleFacet = useCallback(
     (field: string, value: string) => {
@@ -282,22 +306,37 @@ export default function useFacets<TData>(
           return next;
         }
 
-        // Set-based facet
-        let set: Set<string>;
-        if (fieldFilter && fieldFilter.type === "text") {
-          set = new Set(fieldFilter.values);
-        } else {
-          set = new Set<string>();
-        }
-        if (set.has(value)) {
-          set.delete(value);
-        } else {
-          set.add(value);
-        }
-        if (set.size === 0) {
-          delete next[field];
-        } else {
-          next[field] = { type: "text", values: set };
+        if (fieldFacet === "text") {
+          // Text facets: replace existing filter with new value
+          if (
+            fieldFilter &&
+            fieldFilter.type === "text" &&
+            fieldFilter.values.has(value)
+          ) {
+            // If clicking the same value that's already selected, clear the filter
+            delete next[field];
+          } else {
+            // Replace with new value
+            next[field] = { type: "text", values: new Set([value]) };
+          }
+        } else if (fieldFacet === "array") {
+          // Array facets: append/toggle values (boolean AND)
+          let set: Set<string>;
+          if (fieldFilter && fieldFilter.type === "text") {
+            set = new Set(fieldFilter.values);
+          } else {
+            set = new Set<string>();
+          }
+          if (set.has(value)) {
+            set.delete(value);
+          } else {
+            set.add(value);
+          }
+          if (set.size === 0) {
+            delete next[field];
+          } else {
+            next[field] = { type: "text", values: set };
+          }
         }
         return next;
       });
@@ -363,21 +402,6 @@ export default function useFacets<TData>(
   const clearAllFacets = useCallback(() => {
     setActiveFilters({});
   }, []);
-
-  // const activeFiltersPublic = useMemo(() => {
-  //   const out: Record<string, string[]> = {};
-  //   for (const [k, filter] of Object.entries(activeFilters)) {
-  //     if (filter.type === "text") {
-  //       out[k] = Array.from(filter.values).sort();
-  //     } else {
-  //       out[k] = [
-  //         filter.min == null ? "" : String(filter.min),
-  //         filter.max == null ? "" : String(filter.max),
-  //       ];
-  //     }
-  //   }
-  //   return out;
-  // }, [activeFilters]);
 
   return {
     facets,
