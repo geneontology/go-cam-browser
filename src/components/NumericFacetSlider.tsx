@@ -42,6 +42,7 @@ const NumericFacetSlider: React.FC<NumericFacetSliderProps> = ({
   return (
     <RangeSlider
       pr="sm"
+      mb="xl"
       min={facets.values[0]}
       max={facets.values[1]}
       step={1}
