@@ -1,11 +1,14 @@
 import React, { useMemo } from "react";
 import type { TextFacet, TextFilter } from "../hooks/useFacets.ts";
-import { Collapse, Stack, Text, UnstyledButton } from "@mantine/core";
+import { Collapse, Group, Text, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { XIcon } from "@phosphor-icons/react";
+
+import classes from "./TextFacetList.module.css";
 
 interface TextFacetListProps {
   field: string;
-  facets: TextFacet;
+  facet: TextFacet;
   collapsedSize: number;
   onFacetClick: (field: string, value: string) => void;
   activeFilter?: TextFilter;
@@ -13,7 +16,7 @@ interface TextFacetListProps {
 
 const TextFacetList: React.FC<TextFacetListProps> = ({
   field,
-  facets,
+  facet,
   activeFilter,
   collapsedSize,
   onFacetClick,
@@ -21,7 +24,7 @@ const TextFacetList: React.FC<TextFacetListProps> = ({
   const [opened, { toggle }] = useDisclosure(false);
 
   const facetValues = useMemo(() => {
-    return Object.entries(facets.values).sort((a, b) => {
+    return Object.entries(facet.values).sort((a, b) => {
       const countDiff = b[1] - a[1];
       if (countDiff !== 0) {
         return countDiff;
@@ -42,35 +45,41 @@ const TextFacetList: React.FC<TextFacetListProps> = ({
       }
       return a[0].localeCompare(b[0]);
     });
-  }, [facets.values, activeFilter]);
+  }, [facet.values, activeFilter]);
 
   const renderValue = ([value, count]: [string, number]) => {
+    const isActive = !!activeFilter?.values.has(value);
     return (
-      <Text
+      <Group
         key={value}
-        size="sm"
+        className={classes.facetValueGroup}
+        justify="space-between"
+        wrap="nowrap"
         onClick={() => onFacetClick(field, value)}
-        style={{ cursor: "pointer" }}
-        fw={activeFilter && activeFilter.values.has(value) ? 700 : 400}
       >
-        {value} ({count})
-      </Text>
+        <div
+          className={
+            classes.facetValueLabel + (isActive ? ` ${classes.active}` : "")
+          }
+        >
+          {value}
+        </div>
+        <div className={classes.facetValueCount}>
+          {isActive ? <XIcon weight="bold" /> : count}
+        </div>
+      </Group>
     );
   };
 
   return (
     <>
-      <Stack gap="xs" mb="xs">
-        {facetValues.slice(0, collapsedSize).map(renderValue)}
-      </Stack>
+      {facetValues.slice(0, collapsedSize).map(renderValue)}
       <Collapse in={opened}>
-        <Stack gap="xs" mb="xs">
-          {facetValues.slice(collapsedSize).map(renderValue)}
-        </Stack>
+        {facetValues.slice(collapsedSize).map(renderValue)}
       </Collapse>
-      {Object.keys(facets.values).length > collapsedSize && (
+      {Object.keys(facet.values).length > collapsedSize && (
         <UnstyledButton onClick={toggle}>
-          <Text size="xs" c="blue">
+          <Text ml="xs" size="xs" c="blue">
             {opened ? "Show Less" : "Show More"}
           </Text>
         </UnstyledButton>

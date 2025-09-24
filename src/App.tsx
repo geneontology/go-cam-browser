@@ -117,7 +117,7 @@ function App() {
                 <Facet
                   key={field.field}
                   field={field}
-                  facets={facets[field.field]}
+                  facet={facets[field.field]}
                   onClearAll={() => clearFacet(field.field)}
                   onFacetClick={toggleFacet}
                   activeFilter={activeFilters[field.field]}
