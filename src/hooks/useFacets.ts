@@ -320,7 +320,7 @@ export default function useFacets<TData>(
             next[field] = { type: "text", values: new Set([value]) };
           }
         } else if (fieldFacet === "array") {
-          // Array facets: append/toggle values (boolean AND)
+          // Array facets: toggle value in set (add/remove)
           let set: Set<string>;
           if (fieldFilter && fieldFilter.type === "text") {
             set = new Set(fieldFilter.values);
