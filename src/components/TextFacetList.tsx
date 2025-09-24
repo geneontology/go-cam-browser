@@ -5,6 +5,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { XIcon } from "@phosphor-icons/react";
 
 import classes from "./TextFacetList.module.css";
+import clsx from "clsx";
 
 interface TextFacetListProps {
   field: string;
@@ -58,9 +59,10 @@ const TextFacetList: React.FC<TextFacetListProps> = ({
         onClick={() => onFacetClick(field, value)}
       >
         <div
-          className={
-            classes.facetValueLabel + (isActive ? ` ${classes.active}` : "")
-          }
+          className={clsx({
+            [classes.facetValueLabel]: true,
+            [classes.active]: isActive,
+          })}
         >
           {value}
         </div>
