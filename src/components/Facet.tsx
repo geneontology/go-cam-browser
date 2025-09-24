@@ -1,13 +1,13 @@
 import React from "react";
 import type { FieldConfig, IndexedGoCam } from "../types.ts";
-import { Group, Text, UnstyledButton } from "@mantine/core";
+import { Box, Group, Text, UnstyledButton } from "@mantine/core";
 import type { FacetCounts, Filter } from "../hooks/useFacets.ts";
 import TextFacetList from "./TextFacetList.tsx";
 import NumericFacetSlider from "./NumericFacetSlider.tsx";
 
 interface FacetProps {
   field: FieldConfig<IndexedGoCam>;
-  facets?: FacetCounts;
+  facet?: FacetCounts;
   onClearAll: () => void;
   onFacetClick: (field: string, value: string) => void;
   onNumericRangeChange: (field: string, min: number, max: number) => void;
@@ -17,20 +17,20 @@ interface FacetProps {
 
 const Facet: React.FC<FacetProps> = ({
   field,
-  facets,
+  facet,
   onClearAll,
   onFacetClick,
   activeFilter,
   onNumericRangeChange,
   collapsedSize = 10,
 }) => {
-  if (!facets || Object.keys(facets).length === 0) {
+  if (!facet || Object.keys(facet).length === 0) {
     return null;
   }
 
   return (
-    <div>
-      <Group justify="space-between" py="sm">
+    <Box mb="lg">
+      <Group justify="space-between" wrap="nowrap" px="xs">
         <Text fw={600}>{field.label}</Text>
         {activeFilter && (
           <UnstyledButton onClick={onClearAll}>
@@ -40,10 +40,10 @@ const Facet: React.FC<FacetProps> = ({
           </UnstyledButton>
         )}
       </Group>
-      {(facets.type === "text" || facets.type === "array") && (
+      {(facet.type === "text" || facet.type === "array") && (
         <TextFacetList
           field={field.field}
-          facets={facets}
+          facet={facet}
           collapsedSize={collapsedSize}
           onFacetClick={onFacetClick}
           activeFilter={
@@ -53,10 +53,10 @@ const Facet: React.FC<FacetProps> = ({
           }
         />
       )}
-      {facets.type === "numeric" && (
+      {facet.type === "numeric" && (
         <NumericFacetSlider
           field={field.field}
-          facets={facets}
+          facet={facet}
           activeFilter={
             activeFilter && activeFilter.type === "numeric"
               ? activeFilter
@@ -66,7 +66,7 @@ const Facet: React.FC<FacetProps> = ({
           onChange={onNumericRangeChange}
         />
       )}
-    </div>
+    </Box>
   );
 };
 

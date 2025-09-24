@@ -4,7 +4,7 @@ import type { NumericFacet, NumericFilter } from "../hooks/useFacets.ts";
 
 interface NumericFacetSliderProps {
   field: string;
-  facets: NumericFacet;
+  facet: NumericFacet;
   activeFilter?: NumericFilter;
   onClearAll: () => void;
   onChange: (field: string, min: number, max: number) => void;
@@ -12,7 +12,7 @@ interface NumericFacetSliderProps {
 
 const NumericFacetSlider: React.FC<NumericFacetSliderProps> = ({
   field,
-  facets,
+  facet,
   activeFilter,
   onClearAll,
   onChange,
@@ -25,14 +25,14 @@ const NumericFacetSlider: React.FC<NumericFacetSliderProps> = ({
       // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
       // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
       setValue([activeFilter.min, activeFilter.max]);
-    } else if (facets && Array.isArray(facets.values)) {
+    } else if (facet && Array.isArray(facet.values)) {
       // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
-      setValue([facets.values[0], facets.values[1]]);
+      setValue([facet.values[0], facet.values[1]]);
     }
-  }, [activeFilter, facets]);
+  }, [activeFilter, facet]);
 
   const handleChange = (value: [number, number]) => {
-    if (value[0] === facets.values[0] && value[1] === facets.values[1]) {
+    if (value[0] === facet.values[0] && value[1] === facet.values[1]) {
       onClearAll();
     } else {
       onChange(field, value[0], value[1]);
@@ -41,9 +41,10 @@ const NumericFacetSlider: React.FC<NumericFacetSliderProps> = ({
 
   return (
     <RangeSlider
-      pr="sm"
-      min={facets.values[0]}
-      max={facets.values[1]}
+      mx="xs"
+      mb="xl"
+      min={facet.values[0]}
+      max={facet.values[1]}
       step={1}
       minRange={0}
       pushOnOverlap={false}
@@ -52,12 +53,12 @@ const NumericFacetSlider: React.FC<NumericFacetSliderProps> = ({
       onChangeEnd={handleChange}
       marks={[
         {
-          value: facets.values[0],
-          label: String(facets.values[0]),
+          value: facet.values[0],
+          label: String(facet.values[0]),
         },
         {
-          value: facets.values[1],
-          label: String(facets.values[1]),
+          value: facet.values[1],
+          label: String(facet.values[1]),
         },
       ]}
     />
