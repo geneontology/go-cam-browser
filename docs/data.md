@@ -40,7 +40,7 @@ for id in minerva_wrapper.models_ids():
     # Download Minerva format
     minerva_obj = minerva_wrapper.fetch_minerva_object(id)
 
-    # Convert from Minverva format to Model instance
+    # Convert from Minerva format to Model instance
     model = MinervaWrapper.minerva_object_to_model(minerva_obj)
 
     # Populate the Model.query_index slot

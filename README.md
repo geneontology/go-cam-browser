@@ -27,4 +27,3 @@ Basic configuration can be set in `src/config.tsx`. This file allows you to spec
 The application is driven by a JSON file containing indexed GO-CAM models. Currently, the file is served as a static file from this project's `public` directory. For more information on how this file is generated see additional documentation [here](docs/data.md).
 
 If the format of this file changes, be sure to update the `IndexedGoCam` type in `src/types.ts` and the field configurations in `src/config.tsx`.
-
