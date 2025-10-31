@@ -38,7 +38,7 @@ This will download the latest GO-CAMs in Minerva format, convert them to LinkML 
 uv run main.py
 ```
 
-This assumes that the Minerva format files already exist in the default `data/input/minerva` directory. It will skip the downloading and indexing steps.
+This assumes that the Minerva format files already exist in the default `data/input/minerva` directory, and that the indexed LinkML files already exist in the default `data/input/indexed` directory. It will skip the downloading and indexing steps; if the indexed files are missing, the script will fail.
 
 ## Docker Usage
 

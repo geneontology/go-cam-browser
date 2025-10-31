@@ -21,8 +21,6 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-ENTRYPOINT ["python", "main.py"]
-
 USER nonroot
-
+ENTRYPOINT ["python", "main.py"]
 CMD ["--help"]

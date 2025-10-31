@@ -71,12 +71,14 @@ def generate_search_documents(source: Path, destination: Path) -> None:
 
         model = Model.model_validate_json(model_json)
         flattened = flattener.flatten(model)
-        if "model_activity_part_of_rollup_label" not in flattened:
-            flattened["model_activity_part_of_rollup_label"] = []
-        if "model_activity_occurs_in_rollup_label" not in flattened:
-            flattened["model_activity_occurs_in_rollup_label"] = []
-        if "model_activity_enabled_by_terms_label" not in flattened:
-            flattened["model_activity_enabled_by_terms_label"] = []
+        # Ensure required list fields are present
+        for field in [
+            "model_activity_part_of_rollup_label",
+            "model_activity_occurs_in_rollup_label",
+            "model_activity_enabled_by_terms_label",
+        ]:
+            if field not in flattened:
+                flattened[field] = []
         results.append(flattened)
 
     results.sort(key=lambda m: m["date_modified"], reverse=True)
