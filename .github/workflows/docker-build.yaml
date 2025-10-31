@@ -6,12 +6,12 @@ on:
     branches:
       - main
     paths:
-      - 'data/**'
+      - "data/**"
   push:
     branches:
       - main
     paths:
-      - 'data/**'
+      - "data/**"
 
 permissions:
   contents: read
