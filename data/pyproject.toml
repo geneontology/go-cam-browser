@@ -1,0 +1,14 @@
+[project]
+name = "go-cam-browser-data"
+version = "0.1.0"
+description = "Python scripts for regenerating GO-CAM browser data"
+readme = "README.md"
+requires-python = ">=3.13"
+classifiers = [
+    "Private :: Do Not Upload"
+]
+dependencies = [
+    "gocam[oaklib]>=0.5.3",
+    "rich>=14.2.0",
+    "typer>=0.20.0",
+]
