@@ -64,6 +64,7 @@ docker run --rm \
   -v /path/to/minerva/files:/data/minerva:ro \
   -v /path/to/output:/data/output \
   geneontology/go-cam-browser-data-generator \
+  --index \
   --minerva-directory /data/minerva \
   --output-directory /data/output
 ```
@@ -72,11 +73,9 @@ docker run --rm \
 
 ```bash
 docker run --rm \
-  -v /path/to/minerva/files:/data/minerva \
   -v /path/to/output:/data/output \
   geneontology/go-cam-browser-data-generator \
   --download \
-  --minerva-directory /data/minerva \
   --output-directory /data/output
 ```
 
