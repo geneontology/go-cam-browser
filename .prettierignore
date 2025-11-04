@@ -4,3 +4,7 @@ coverage
 
 # Ignore generated data file
 public/data.json
+
+# Ignore data directory, except README.md
+data
+!data/README.md
