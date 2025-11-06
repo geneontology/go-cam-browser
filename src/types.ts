@@ -19,6 +19,7 @@ export interface FieldConfig<TData, TField extends keyof TData = keyof TData> {
   label: string;
   searchable: boolean;
   facet?: "text" | "array" | "numeric";
+  facetHelp?: ReactNode;
   defaultVisible: boolean;
   render(value: TData[TField], row: TData): ReactNode;
 }
@@ -53,6 +54,7 @@ export function createFieldConfig<TData>() {
       label: config.label ?? String(config.field),
       searchable: config.searchable ?? false,
       facet: config.facet,
+      facetHelp: config.facetHelp,
       defaultVisible: config.defaultVisible ?? true,
       render(value: TData[TField], row: TData) {
         if (config.render) {
