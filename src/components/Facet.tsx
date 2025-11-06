@@ -42,9 +42,15 @@ const Facet: React.FC<FacetProps> = ({
         <Group gap="xs">
           <Text fw={600}>{field.label}</Text>
           {field.facetHelp && (
-            <HoverCard width={200} shadow="lg">
+            <HoverCard width={300} shadow="lg">
               <HoverCard.Target>
-                <ThemeIcon variant="white" color="gray" size="sm">
+                <ThemeIcon
+                  variant="white"
+                  color="gray"
+                  size="sm"
+                  aria-label="Help information"
+                  role="button"
+                >
                   <QuestionIcon size="100%" />
                 </ThemeIcon>
               </HoverCard.Target>
