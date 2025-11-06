@@ -38,11 +38,9 @@ export default function useSearch<TData>(options: UseSearchOptions<TData>) {
         return;
       }
       setIsIndexing(true);
-      console.log("reindexing start", data.length);
       for (const item of data) {
         await index.addAsync(item as DocumentData);
       }
-      console.log("reindexing done");
       setIsIndexing(false);
     };
     void reIndex();
