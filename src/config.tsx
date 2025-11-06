@@ -48,7 +48,7 @@ export const config = createConfig<IndexedGoCam>({
     }),
     goCamField({
       field: "model_activity_part_of_rollup_label",
-      label: "Part Of",
+      label: "Biological Process",
       facet: "array",
       facetHelp:
         "The facet values listed here are higher-level GO Biological Process terms. Selecting one " +
@@ -59,7 +59,7 @@ export const config = createConfig<IndexedGoCam>({
     }),
     goCamField({
       field: "model_activity_occurs_in_rollup_label",
-      label: "Occurs In",
+      label: "Cellular Component",
       facet: "array",
       facetHelp:
         "The facet values listed here are higher-level GO Cellular Component terms. Selecting one " +
