@@ -1,0 +1,6 @@
+.venv
+input
+output
+Dockerfile
+README.md
+.gitignore

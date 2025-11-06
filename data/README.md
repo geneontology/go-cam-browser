@@ -60,7 +60,7 @@ The Docker image expects two bind mounts:
 #### Example: Generate data.json from existing Minerva files
 
 ```bash
-docker run --rm \
+docker run --rm --tty \
   -v /path/to/minerva/files:/data/minerva:ro \
   -v /path/to/output:/data/output \
   geneontology/go-cam-browser-data-generator \
@@ -69,10 +69,16 @@ docker run --rm \
   --output-directory /data/output
 ```
 
+> [!NOTE]  
+> Be sure to specify a published tag (e.g. `geneontology/go-cam-browser-data-generator:main`) unless you built the image locally with the default `latest` tag.
+
+> [!NOTE]  
+> The `--tty` flag is only necessary if you want to see live-updating progress bars. This may be omitted in automated processes.
+
 #### Example: Download, index, and generate data.json
 
 ```bash
-docker run --rm \
+docker run --rm --tty \
   -v /path/to/output:/data/output \
   geneontology/go-cam-browser-data-generator \
   --download \

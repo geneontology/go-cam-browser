@@ -128,15 +128,15 @@ def main(
     """Generate search documents from GO-CAM models."""
     if download:
         shutil.rmtree(minerva_directory, ignore_errors=True)
-        minerva_directory.mkdir(exist_ok=True)
+        minerva_directory.mkdir(exist_ok=True, parents=True)
         download_latest_release_gocams(minerva_directory)
 
     if download or index:
         shutil.rmtree(indexed_directory, ignore_errors=True)
-        indexed_directory.mkdir(exist_ok=True)
+        indexed_directory.mkdir(exist_ok=True, parents=True)
         generate_indexed_models(minerva_directory, indexed_directory)
 
-    output_directory.mkdir(exist_ok=True)
+    output_directory.mkdir(exist_ok=True, parents=True)
     generate_search_documents(indexed_directory, output_directory / "data.json")
 
 
