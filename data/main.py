@@ -53,7 +53,9 @@ def generate_search_documents(source: Path, destination: Path) -> None:
             "taxon_label",
             "status",
             "date_modified",
+            "model_activity_part_of_terms_label",
             "model_activity_part_of_rollup_label",
+            "model_activity_occurs_in_terms_label",
             "model_activity_occurs_in_rollup_label",
             "model_activity_enabled_by_terms_label",
             "number_of_activities",
@@ -71,14 +73,17 @@ def generate_search_documents(source: Path, destination: Path) -> None:
 
         model = Model.model_validate_json(model_json)
         flattened = flattener.flatten(model)
-        # Ensure required list fields are present
+        # Ensure required list fields are present and sorted
         for field in [
+            "model_activity_part_of_terms_label",
             "model_activity_part_of_rollup_label",
             "model_activity_occurs_in_rollup_label",
+            "model_activity_occurs_in_terms_label",
             "model_activity_enabled_by_terms_label",
         ]:
             if field not in flattened:
                 flattened[field] = []
+            flattened[field] = sorted(v for v in flattened[field] if v)
         results.append(flattened)
 
     results.sort(key=lambda m: m["date_modified"], reverse=True)

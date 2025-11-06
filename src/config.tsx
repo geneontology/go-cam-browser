@@ -48,21 +48,30 @@ export const config = createConfig<IndexedGoCam>({
     }),
     goCamField({
       field: "model_activity_part_of_rollup_label",
-      label: "Part Of",
+      label: "Biological Process",
       facet: "array",
-      render: (value) => value?.join(", "),
+      facetHelp:
+        "The facet values listed here are higher-level GO Biological Process terms. Selecting one " +
+        "will filter models annotated to any of its descendant terms. The full list of specific " +
+        "terms for each GO-CAM is displayed in the 'Biological Process' field in the results.",
+      render: (_, gocam) => gocam.model_activity_part_of_terms_label.join(", "),
     }),
     goCamField({
       field: "model_activity_occurs_in_rollup_label",
-      label: "Occurs In",
+      label: "Cellular Component",
       facet: "array",
-      render: (value) => value?.join(", "),
+      facetHelp:
+        "The facet values listed here are higher-level GO Cellular Component terms. Selecting one " +
+        "will filter models annotated to any of its descendant terms. The full list of specific " +
+        "terms for each GO-CAM is displayed in the 'Cellular Component' field in the results.",
+      render: (_, gocam) =>
+        gocam.model_activity_occurs_in_terms_label.join(", "),
     }),
     goCamField({
       field: "model_activity_enabled_by_terms_label",
       label: "Genes",
       facet: "array",
-      render: (value) => value?.join(", "),
+      render: (value) => value.join(", "),
     }),
     goCamField({
       field: "number_of_activities",

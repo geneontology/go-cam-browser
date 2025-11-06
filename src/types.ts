@@ -6,9 +6,11 @@ export type IndexedGoCam = {
   taxon?: string | null;
   taxon_label?: string | null;
   status: string;
-  model_activity_part_of_rollup_label?: string[] | null;
-  model_activity_occurs_in_rollup_label?: string[] | null;
-  model_activity_enabled_by_terms_label?: string[] | null;
+  model_activity_part_of_terms_label: string[];
+  model_activity_part_of_rollup_label: string[];
+  model_activity_occurs_in_terms_label: string[];
+  model_activity_occurs_in_rollup_label: string[];
+  model_activity_enabled_by_terms_label: string[];
   number_of_activities: number;
   length_of_longest_causal_association_path?: number | null;
   number_of_strongly_connected_components?: number | null;
@@ -19,6 +21,7 @@ export interface FieldConfig<TData, TField extends keyof TData = keyof TData> {
   label: string;
   searchable: boolean;
   facet?: "text" | "array" | "numeric";
+  facetHelp?: ReactNode;
   defaultVisible: boolean;
   render(value: TData[TField], row: TData): ReactNode;
 }
@@ -53,6 +56,7 @@ export function createFieldConfig<TData>() {
       label: config.label ?? String(config.field),
       searchable: config.searchable ?? false,
       facet: config.facet,
+      facetHelp: config.facetHelp,
       defaultVisible: config.defaultVisible ?? true,
       render(value: TData[TField], row: TData) {
         if (config.render) {

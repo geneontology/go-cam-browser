@@ -1,9 +1,17 @@
 import React from "react";
 import type { FieldConfig, IndexedGoCam } from "../types.ts";
-import { Box, Group, Text, UnstyledButton } from "@mantine/core";
+import {
+  Box,
+  Group,
+  HoverCard,
+  Text,
+  ThemeIcon,
+  UnstyledButton,
+} from "@mantine/core";
 import type { FacetCounts, Filter } from "../hooks/useFacets.ts";
 import TextFacetList from "./TextFacetList.tsx";
 import NumericFacetSlider from "./NumericFacetSlider.tsx";
+import { QuestionIcon } from "@phosphor-icons/react";
 
 interface FacetProps {
   field: FieldConfig<IndexedGoCam>;
@@ -31,7 +39,27 @@ const Facet: React.FC<FacetProps> = ({
   return (
     <Box mb="lg">
       <Group justify="space-between" wrap="nowrap" px="xs">
-        <Text fw={600}>{field.label}</Text>
+        <Group gap="xs">
+          <Text fw={600}>{field.label}</Text>
+          {field.facetHelp && (
+            <HoverCard width={300} shadow="lg">
+              <HoverCard.Target>
+                <ThemeIcon
+                  variant="white"
+                  color="gray"
+                  size="sm"
+                  aria-label="Help information"
+                  role="button"
+                >
+                  <QuestionIcon size="100%" />
+                </ThemeIcon>
+              </HoverCard.Target>
+              <HoverCard.Dropdown>
+                <Text size="sm">{field.facetHelp}</Text>
+              </HoverCard.Dropdown>
+            </HoverCard>
+          )}
+        </Group>
         {activeFilter && (
           <UnstyledButton onClick={onClearAll}>
             <Text size="xs" c="blue">
