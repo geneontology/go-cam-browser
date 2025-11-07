@@ -45,23 +45,28 @@ def generate_indexed_models(source: Path, destination: Path) -> None:
 
 def generate_search_documents(source: Path, destination: Path) -> None:
     """Generate search documents from indexed Model instances."""
+    array_fields = [
+        "model_activity_enabled_by_terms_label",
+        "model_activity_enabled_by_terms_id",
+        "model_activity_occurs_in_rollup_label",
+        "model_activity_occurs_in_terms_label",
+        "model_activity_occurs_in_terms_id",
+        "model_activity_part_of_rollup_label",
+        "model_activity_part_of_terms_label",
+        "model_activity_part_of_terms_id",
+    ]
     flattener = Flattener(
         fields=[
+            "date_modified",
             "id",
-            "title",
+            "length_of_longest_causal_association_path",
+            "number_of_activities",
+            "number_of_strongly_connected_components",
+            "status",
             "taxon",
             "taxon_label",
-            "status",
-            "date_modified",
-            "model_activity_part_of_terms_label",
-            "model_activity_part_of_rollup_label",
-            "model_activity_occurs_in_terms_label",
-            "model_activity_occurs_in_rollup_label",
-            "model_activity_enabled_by_terms_label",
-            "number_of_activities",
-            "length_of_longest_causal_association_path",
-            "number_of_strongly_connected_components",
-        ]
+            "title",
+        ] + array_fields
     )
     results = []
     indexed_files = list(source.glob("*.json"))
@@ -74,16 +79,9 @@ def generate_search_documents(source: Path, destination: Path) -> None:
         model = Model.model_validate_json(model_json)
         flattened = flattener.flatten(model)
         # Ensure required list fields are present and sorted
-        for field in [
-            "model_activity_part_of_terms_label",
-            "model_activity_part_of_rollup_label",
-            "model_activity_occurs_in_rollup_label",
-            "model_activity_occurs_in_terms_label",
-            "model_activity_enabled_by_terms_label",
-        ]:
+        for field in array_fields:
             if field not in flattened:
                 flattened[field] = []
-            flattened[field] = sorted(v for v in flattened[field] if v)
         results.append(flattened)
 
     results.sort(key=lambda m: m["date_modified"], reverse=True)
