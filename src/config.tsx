@@ -1,5 +1,6 @@
 import { createConfig, createFieldConfig, type IndexedGoCam } from "./types.ts";
 import BioregistryLink from "./components/BioregistryLink.tsx";
+import TermLinkList from "./components/TermLinkList.tsx";
 
 const goCamField = createFieldConfig<IndexedGoCam>();
 
@@ -54,7 +55,12 @@ export const config = createConfig<IndexedGoCam>({
         "The facet values listed here are higher-level GO Biological Process terms. Selecting one " +
         "will filter models annotated to any of its descendant terms. The full list of specific " +
         "terms for each GO-CAM is displayed in the 'Biological Process' field in the results.",
-      render: (_, gocam) => gocam.model_activity_part_of_terms_label.join(", "),
+      render: (_, gocam) => (
+        <TermLinkList
+          ids={gocam.model_activity_part_of_terms_id}
+          labels={gocam.model_activity_part_of_terms_label}
+        />
+      ),
     }),
     goCamField({
       field: "model_activity_occurs_in_rollup_label",
@@ -64,14 +70,23 @@ export const config = createConfig<IndexedGoCam>({
         "The facet values listed here are higher-level GO Cellular Component terms. Selecting one " +
         "will filter models annotated to any of its descendant terms. The full list of specific " +
         "terms for each GO-CAM is displayed in the 'Cellular Component' field in the results.",
-      render: (_, gocam) =>
-        gocam.model_activity_occurs_in_terms_label.join(", "),
+      render: (_, gocam) => (
+        <TermLinkList
+          ids={gocam.model_activity_occurs_in_terms_id}
+          labels={gocam.model_activity_occurs_in_terms_label}
+        />
+      ),
     }),
     goCamField({
       field: "model_activity_enabled_by_terms_label",
       label: "Genes",
       facet: "array",
-      render: (value) => value.join(", "),
+      render: (value, gocam) => (
+        <TermLinkList
+          ids={gocam.model_activity_enabled_by_terms_id}
+          labels={value}
+        />
+      ),
     }),
     goCamField({
       field: "number_of_activities",

@@ -6,11 +6,14 @@ export type IndexedGoCam = {
   taxon?: string | null;
   taxon_label?: string | null;
   status: string;
-  model_activity_part_of_terms_label: string[];
-  model_activity_part_of_rollup_label: string[];
-  model_activity_occurs_in_terms_label: string[];
-  model_activity_occurs_in_rollup_label: string[];
   model_activity_enabled_by_terms_label: string[];
+  model_activity_enabled_by_terms_id: string[];
+  model_activity_occurs_in_rollup_label: string[];
+  model_activity_occurs_in_terms_label: string[];
+  model_activity_occurs_in_terms_id: string[];
+  model_activity_part_of_rollup_label: string[];
+  model_activity_part_of_terms_label: string[];
+  model_activity_part_of_terms_id: string[];
   number_of_activities: number;
   length_of_longest_causal_association_path?: number | null;
   number_of_strongly_connected_components?: number | null;
