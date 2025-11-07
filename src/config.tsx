@@ -6,7 +6,7 @@ const goCamField = createFieldConfig<IndexedGoCam>();
 export const config = createConfig<IndexedGoCam>({
   title: "GO-CAM Browser",
   description: "Search and filter models by multiple criteria",
-  dataUrl: "/data.json",
+  dataUrl: import.meta.env.BASE_URL + "data.json",
   headerLinks: [
     {
       label: "GO-CAM Overview",
