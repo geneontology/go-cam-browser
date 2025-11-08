@@ -1,12 +1,7 @@
 # Adapted from https://github.com/astral-sh/uv-docker-example/blob/5748835918ec293d547bbe0e42df34e140aca1eb/Dockerfile
 FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
 
-RUN groupadd --system --gid 999 nonroot \
- && useradd --system --gid 999 --uid 999 --create-home nonroot
-
 WORKDIR /app
-
-RUN chown nonroot:nonroot /app
 
 ENV TQDM_MININTERVAL=5
 ENV UV_COMPILE_BYTECODE=1
@@ -24,6 +19,5 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-USER nonroot
 ENTRYPOINT ["python", "main.py"]
 CMD ["--help"]
