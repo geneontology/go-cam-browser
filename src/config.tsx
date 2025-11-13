@@ -30,14 +30,15 @@ export const config = createConfig<IndexedGoCam>({
       field: "id",
       label: "Model ID",
       searchable: true,
-      render: (value) => <BioregistryLink id={value} />,
+      defaultVisible: false,
     }),
     goCamField({
       field: "title",
       label: "Title",
       searchable: true,
-      render: (value) =>
-        typeof value === "string" && value ? value : "Untitled",
+      render: (title, gocam) => (
+        <BioregistryLink id={gocam.id}>{title}</BioregistryLink>
+      ),
     }),
     goCamField({
       field: "taxon_label",
