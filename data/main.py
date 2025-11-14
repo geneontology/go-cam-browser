@@ -8,6 +8,7 @@ from gocam.datamodel import Model
 from gocam.indexing.Flattener import Flattener
 from gocam.indexing.Indexer import Indexer
 from gocam.translation import MinervaWrapper
+from gocam.utils import remove_species_code_suffix
 from rich.progress import track
 
 app = typer.Typer()
@@ -66,7 +67,8 @@ def generate_search_documents(source: Path, destination: Path) -> None:
             "taxon",
             "taxon_label",
             "title",
-        ] + array_fields
+        ]
+        + array_fields
     )
     results = []
     indexed_files = list(source.glob("*.json"))
@@ -82,6 +84,12 @@ def generate_search_documents(source: Path, destination: Path) -> None:
         for field in array_fields:
             if field not in flattened:
                 flattened[field] = []
+
+        field = "model_activity_enabled_by_terms_label"
+        flattened[field] = [
+            remove_species_code_suffix(label) for label in flattened[field]
+        ]
+
         results.append(flattened)
 
     results.sort(key=lambda m: m["date_modified"], reverse=True)

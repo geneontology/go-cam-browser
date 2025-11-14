@@ -15,6 +15,7 @@ const BioregistryLink: React.FC<BioregistryLinkProps> = ({ id, children }) => {
       target="_blank"
       rel="noreferrer noopener"
       inherit
+      title={id}
     >
       {children || id}
     </Anchor>

@@ -8,7 +8,7 @@ classifiers = [
     "Private :: Do Not Upload"
 ]
 dependencies = [
-    "gocam[oaklib]>=0.5.3",
+    "gocam[oaklib]>=0.5.5",
     "rich>=14.2.0",
     "typer>=0.20.0",
 ]
