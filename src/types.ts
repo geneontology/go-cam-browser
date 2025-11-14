@@ -38,6 +38,7 @@ export interface AppConfig<
 > {
   title: string;
   description: string;
+  googleTagID?: string;
   dataUrl: string;
   headerLinks?: {
     label: string;
