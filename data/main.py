@@ -27,10 +27,9 @@ def download_latest_release_gocams(destination: Path) -> None:
             json.dump(minerva_object, f)
 
 
-def generate_indexed_models(source: Path, destination: Path) -> None:
+def generate_indexed_models(indexer: Indexer, source: Path, destination: Path) -> None:
     """Generate indexed Model instances from Minerva JSON files."""
     minerva_wrapper = MinervaWrapper()
-    indexer = Indexer()
     gocam_files = list(source.glob("*.json"))
     for gocam_file in track(gocam_files, description="Generating indexed models..."):
         with open(gocam_file, "r") as f:
@@ -66,7 +65,8 @@ def generate_search_documents(source: Path, destination: Path) -> None:
             "taxon",
             "taxon_label",
             "title",
-        ] + array_fields
+        ]
+        + array_fields
     )
     results = []
     indexed_files = list(source.glob("*.json"))
@@ -127,6 +127,18 @@ def main(
             file_okay=False,
         ),
     ] = local_output_dir,
+    go_adapater_descriptor: Annotated[
+        str,
+        typer.Option(
+            help="OAK adapter descriptor for GO. See: https://incatools.github.io/ontology-access-kit/packages/selectors.html#ontology-adapter-selectors",
+        ),
+    ] = "sqlite:obo:go",
+    ncbi_taxon_adapter_descriptor: Annotated[
+        str,
+        typer.Option(
+            help="OAK adapter descriptor for the NCBITaxon ontology. See: https://incatools.github.io/ontology-access-kit/packages/selectors.html#ontology-adapter-selectors",
+        ),
+    ] = "sqlite:obo:ncbitaxon",
 ) -> None:
     """Generate search documents from GO-CAM models."""
     if download:
@@ -137,7 +149,11 @@ def main(
     if download or index:
         shutil.rmtree(indexed_directory, ignore_errors=True)
         indexed_directory.mkdir(exist_ok=True, parents=True)
-        generate_indexed_models(minerva_directory, indexed_directory)
+        indexer = Indexer(
+            go_adapter_descriptor=go_adapater_descriptor,
+            ncbi_taxon_adapter_descriptor=ncbi_taxon_adapter_descriptor,
+        )
+        generate_indexed_models(indexer, minerva_directory, indexed_directory)
 
     output_directory.mkdir(exist_ok=True, parents=True)
     generate_search_documents(indexed_directory, output_directory / "data.json")
