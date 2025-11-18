@@ -11,24 +11,22 @@ import {
   Text,
   UnstyledButton,
 } from "@mantine/core";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { config } from "./config.tsx";
+import { HEADER_HEIGHT, NAVBAR_WIDTH } from "./constants.ts";
 import useFacets from "./hooks/useFacets.ts";
+import useUserSettings from "./hooks/useUserSettings.ts";
 import Facet from "./components/Facet.tsx";
-import ResultList from "./components/ResultList.tsx";
 import useSearch from "./hooks/useSearch.ts";
 import useQueryData from "./hooks/useQueryData.ts";
 import SearchInput from "./components/SearchInput.tsx";
 import Header from "./components/Header.tsx";
-import ConfigMenu from "./components/ConfigMenu.tsx";
+import UserSettingsMenu from "./components/UserSettingsMenu.tsx";
 import HeaderLinks from "./components/HeaderLinks.tsx";
-import type { IndexedGoCam } from "./types.ts";
 import Footer from "./components/Footer.tsx";
+import ResultsDisplay from "./components/ResultsDisplay.tsx";
 
 import classes from "./App.module.css";
-
-const HEADER_HEIGHT = 60;
-const NAVBAR_WIDTH = 320;
 
 const SEARCH_FIELDS = config.fields
   .filter((f) => f.searchable)
@@ -41,11 +39,7 @@ function ScrollAreaWrapper({ children }: { children: React.ReactNode }) {
 function App() {
   const [opened, { toggle }] = useDisclosure();
   const targetRef = useRef<HTMLDivElement>(null);
-  const [visibleFields, setVisibleFields] = useState(
-    config.fields
-      .filter((field) => field.defaultVisible)
-      .map((field) => field.field),
-  );
+  const visibleFields = useUserSettings((state) => state.visibleFields);
 
   const { isPending, isError, data, error } = useQueryData();
 
@@ -77,16 +71,6 @@ function App() {
       targetRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [activeFilters]);
-
-  const handleToggleField = (field: keyof IndexedGoCam) => {
-    setVisibleFields((prev) => {
-      if (prev.includes(field)) {
-        return prev.filter((f) => f !== field);
-      } else {
-        return [...prev, field];
-      }
-    });
-  };
 
   return (
     <AppShell
@@ -132,10 +116,7 @@ function App() {
         <div className={classes.mainContent}>
           <Group align="center" mb="md">
             <SearchInput onSearch={search} disabled={isIndexing || isPending} />
-            <ConfigMenu
-              visibleFields={visibleFields}
-              onToggleField={handleToggleField}
-            />
+            <UserSettingsMenu />
           </Group>
           {isPending && (
             <Group align="center" gap="sm" mb="md">
@@ -162,10 +143,9 @@ function App() {
               )}
             </Group>
           )}
-          <ResultList
+          <ResultsDisplay
             data={searchResults}
             displayIndexes={matchingIndexes}
-            visibleFields={visibleFields}
           />
         </div>
         <Footer />

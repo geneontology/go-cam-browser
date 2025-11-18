@@ -81,3 +81,21 @@ export function createConfig<
 >(config: AppConfig<TData, TFields>): AppConfig<TData, TFields> {
   return config;
 }
+
+export const ResultsDisplayType = {
+  LIST: "List",
+  TABLE: "Table",
+} as const;
+
+export type ResultsDisplayType =
+  (typeof ResultsDisplayType)[keyof typeof ResultsDisplayType];
+
+export interface ResultsDisplayProps {
+  data: IndexedGoCam[];
+  displayIndexes: number[];
+}
+
+export interface ResultsDisplayCommonProps {
+  displayGoCams: IndexedGoCam[];
+  displayFields: FieldConfig<IndexedGoCam>[];
+}
