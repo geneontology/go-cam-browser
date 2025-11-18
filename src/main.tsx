@@ -6,6 +6,7 @@ import Analytics from "./components/Analytics.tsx";
 import App from "./App.tsx";
 
 import "@mantine/core/styles.css";
+import "./global.css";
 
 const theme = createTheme({});
 
