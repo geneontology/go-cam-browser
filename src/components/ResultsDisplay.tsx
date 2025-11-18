@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { type ResultsDisplayProps, ResultsDisplayType } from "../types.ts";
 import { Box, Button } from "@mantine/core";
 import ResultsList from "./ResultsList.tsx";
@@ -11,7 +11,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
   data,
   displayIndexes,
 }) => {
-  const [limit, setLimit] = React.useState(RESULTS_PAGE_SIZE);
+  const [limit, setLimit] = useState(RESULTS_PAGE_SIZE);
   const visibleFields = useUserSettings((state) => state.visibleFields);
   const resultsDisplayType = useUserSettings(
     (state) => state.resultsDisplayType,
