@@ -46,8 +46,8 @@ def generate_indexed_models(indexer: Indexer, source: Path, destination: Path) -
 def generate_search_documents(source: Path, destination: Path) -> None:
     """Generate search documents from indexed Model instances."""
     array_fields = [
-        "model_activity_enabled_by_terms_label",
-        "model_activity_enabled_by_terms_id",
+        "model_activity_enabled_by_genes_label",
+        "model_activity_enabled_by_genes_id",
         "model_activity_occurs_in_rollup_label",
         "model_activity_occurs_in_terms_label",
         "model_activity_occurs_in_terms_id",
@@ -84,9 +84,9 @@ def generate_search_documents(source: Path, destination: Path) -> None:
             if field not in flattened:
                 flattened[field] = []
 
-        field = "model_activity_enabled_by_terms_label"
-        flattened[field] = [
-            remove_species_code_suffix(label) for label in flattened[field]
+        genes_label_field = "model_activity_enabled_by_genes_label"
+        flattened[genes_label_field] = [
+            remove_species_code_suffix(label) for label in flattened[genes_label_field]
         ]
 
         results.append(flattened)

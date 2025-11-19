@@ -80,12 +80,12 @@ export const config = createConfig<IndexedGoCam>({
       ),
     }),
     goCamField({
-      field: "model_activity_enabled_by_terms_label",
+      field: "model_activity_enabled_by_genes_label",
       label: "Genes",
       facet: "array",
       render: (value, gocam) => (
         <TermLinkList
-          ids={gocam.model_activity_enabled_by_terms_id}
+          ids={gocam.model_activity_enabled_by_genes_id}
           labels={value}
         />
       ),

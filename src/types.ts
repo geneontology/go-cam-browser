@@ -6,8 +6,8 @@ export type IndexedGoCam = {
   taxon?: string | null;
   taxon_label?: string | null;
   status: string;
-  model_activity_enabled_by_terms_label: string[];
-  model_activity_enabled_by_terms_id: string[];
+  model_activity_enabled_by_genes_label: string[];
+  model_activity_enabled_by_genes_id: string[];
   model_activity_occurs_in_rollup_label: string[];
   model_activity_occurs_in_terms_label: string[];
   model_activity_occurs_in_terms_id: string[];
