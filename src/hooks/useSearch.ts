@@ -1,10 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Charset, Document, type DocumentData } from "flexsearch";
+import {
+  Charset,
+  Document,
+  type DocumentData,
+  type FieldOptions,
+} from "flexsearch";
+import { config } from "../config.tsx";
+
+const ID_FIELD = config.fields.filter((f) => f.isId)[0];
+const SEARCH_FIELDS = config.fields.filter((f) => f.searchable);
 
 interface UseSearchOptions<TData> {
   data?: TData[];
-  idField: keyof TData;
-  searchFields: (keyof TData & string)[];
 }
 
 interface UseSearchResult<TData> {
@@ -13,22 +20,28 @@ interface UseSearchResult<TData> {
   search: (query: string) => Promise<void>;
 }
 
-export default function useSearch<TData>(options: UseSearchOptions<TData>) {
-  const { data, idField, searchFields } = options;
+export default function useSearch<TData extends DocumentData>(
+  options: UseSearchOptions<TData>,
+) {
+  const { data } = options;
   const [isIndexing, setIsIndexing] = useState<boolean>(false);
   const [results, setResults] = useState<TData[]>([]);
 
   const index = useMemo(() => {
     return new Document({
-      tokenize: "forward",
-      encoder: Charset.LatinBalance,
-      document: {
-        id: String(idField),
-        index: searchFields,
-        store: true,
-      },
+      id: ID_FIELD.field,
+      store: true,
+      index: SEARCH_FIELDS.map(
+        (f) =>
+          ({
+            field: String(f.field),
+            tokenize: "forward",
+            encoder: f.searchFuzzy ? Charset.LatinBalance : Charset.Default,
+            context: true,
+          }) as FieldOptions<TData>,
+      ),
     });
-  }, [idField, searchFields]);
+  }, []);
 
   useEffect(() => {
     const reIndex = async () => {
@@ -39,7 +52,7 @@ export default function useSearch<TData>(options: UseSearchOptions<TData>) {
       }
       setIsIndexing(true);
       for (const item of data) {
-        await index.addAsync(item as DocumentData);
+        await index.addAsync(item);
       }
       setIsIndexing(false);
     };
@@ -57,7 +70,7 @@ export default function useSearch<TData>(options: UseSearchOptions<TData>) {
         enrich: true,
         limit: data?.length || 0,
       });
-      setResults(searchResults.map((result) => result.doc as TData));
+      setResults(searchResults.map((result) => result.doc!));
     },
     [data, index],
   );
