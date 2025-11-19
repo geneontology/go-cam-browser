@@ -7,7 +7,7 @@ import { config } from "../config.tsx";
  * It only initializes analytics in production mode and if the googleTagID is set.
  *
  * Note: This component manually injects <script> tags into the document head to load Google
- *       Analytics. It does not rely on Reach 19's built-in <script> tag handling because that
+ *       Analytics. It does not rely on React 19's built-in <script> tag handling because that
  *       does not execute inline script content.
  *       See:
  *         - https://react.dev/reference/react-dom/components/script
