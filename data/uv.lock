@@ -337,14 +337,14 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "gocam", extras = ["oaklib"], specifier = ">=0.5.5" },
+    { name = "gocam", extras = ["oaklib"], specifier = ">=0.6.0" },
     { name = "rich", specifier = ">=14.2.0" },
     { name = "typer", specifier = ">=0.20.0" },
 ]
 
 [[package]]
 name = "gocam"
-version = "0.5.5"
+version = "0.6.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -354,9 +354,9 @@ dependencies = [
     { name = "pyyaml" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/64/60/d236c79bf6cfcff22110537467bc7c141712d4ebca53ee59994fe1105a48/gocam-0.5.5.tar.gz", hash = "sha256:59ea69e63b4164944cf5aa0f050cc79e11467168be9ff18b2507c15c378325a2", size = 2256772, upload-time = "2025-11-14T16:49:26.75Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/cf/3e/f12f2ac8860ebf6577cf5c392e68e7a7c68008f21b425f1c23b6b5350b6a/gocam-0.6.0.tar.gz", hash = "sha256:b1d32c978031eacd1886288354a52d325843469b3d5c4ff1ab6127ebd3e0241a", size = 2257427, upload-time = "2025-11-18T23:32:03.426Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/63/6b/00eb7c24f1aa082bac7cf3123a8ac11e8020492f078ba209a3931aaba83e/gocam-0.5.5-py3-none-any.whl", hash = "sha256:5a1b79ff19eee76b2415bebcb22f53550e6af6350cf18a15fcc7f69871391bca", size = 56346, upload-time = "2025-11-14T16:49:25.19Z" },
+    { url = "https://files.pythonhosted.org/packages/d4/3e/6c73fbd4b6af3eb913ae7b818e9c4fe75bc4434d0cf60457a566796a38c7/gocam-0.6.0-py3-none-any.whl", hash = "sha256:dd8df2f52be52a892b695ac4050b6211ef5684b2b96d7d9effda8ee5b3bc65ca", size = 56562, upload-time = "2025-11-18T23:32:01.899Z" },
 ]
 
 [package.optional-dependencies]
