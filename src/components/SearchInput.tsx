@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Input, TextInput } from "@mantine/core";
 import { useDebouncedCallback } from "@mantine/hooks";
+import { config } from "../config.tsx";
 
 interface SearchInputProps {
   disabled?: boolean;
@@ -24,10 +25,10 @@ const SearchInput: React.FC<SearchInputProps> = ({ disabled, onSearch }) => {
 
   return (
     <TextInput
-      aria-label="Search GO-CAMs"
+      aria-label={config.searchPlaceholder}
       size="lg"
       flex="1"
-      placeholder="Search GO-CAMs"
+      placeholder={config.searchPlaceholder}
       value={search}
       disabled={disabled}
       onChange={handleChange}

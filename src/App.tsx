@@ -28,10 +28,6 @@ import ResultsDisplay from "./components/ResultsDisplay.tsx";
 
 import classes from "./App.module.css";
 
-const SEARCH_FIELDS = config.fields
-  .filter((f) => f.searchable)
-  .map((f) => f.field);
-
 function ScrollAreaWrapper({ children }: { children: React.ReactNode }) {
   return <ScrollArea offsetScrollbars>{children}</ScrollArea>;
 }
@@ -49,8 +45,6 @@ function App() {
     search,
   } = useSearch({
     data: data,
-    idField: "id",
-    searchFields: SEARCH_FIELDS,
   });
 
   const {

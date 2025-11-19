@@ -7,6 +7,7 @@ const goCamField = createFieldConfig<IndexedGoCam>();
 export const config = createConfig<IndexedGoCam>({
   title: "GO-CAM Browser",
   description: "Search and filter models by multiple criteria",
+  searchPlaceholder: "Search GO-CAMs by title or gene",
   googleTagID: "G-MR617LRG6M",
   dataUrl: import.meta.env.BASE_URL + "data.json",
   headerLinks: [
@@ -29,6 +30,7 @@ export const config = createConfig<IndexedGoCam>({
   fields: [
     goCamField({
       field: "id",
+      isId: true,
       label: "Model ID",
       searchable: true,
       defaultVisible: false,
@@ -37,6 +39,7 @@ export const config = createConfig<IndexedGoCam>({
       field: "title",
       label: "Title",
       searchable: true,
+      searchFuzzy: true,
       render: (title, gocam) => (
         <BioregistryLink id={gocam.id}>{title}</BioregistryLink>
       ),
@@ -82,6 +85,7 @@ export const config = createConfig<IndexedGoCam>({
     goCamField({
       field: "model_activity_enabled_by_genes_label",
       label: "Genes",
+      searchable: true,
       facet: "array",
       render: (value, gocam) => (
         <TermLinkList

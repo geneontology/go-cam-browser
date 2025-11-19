@@ -21,8 +21,10 @@ export type IndexedGoCam = {
 
 export interface FieldConfig<TData, TField extends keyof TData = keyof TData> {
   field: TField;
+  isId: boolean;
   label: string;
   searchable: boolean;
+  searchFuzzy: boolean;
   facet?: "text" | "array" | "numeric";
   facetHelp?: ReactNode;
   defaultVisible: boolean;
@@ -38,6 +40,7 @@ export interface AppConfig<
 > {
   title: string;
   description: string;
+  searchPlaceholder: string;
   googleTagID?: string;
   dataUrl: string;
   headerLinks?: {
@@ -57,8 +60,10 @@ export function createFieldConfig<TData>() {
   ): FieldConfig<TData, TField> {
     return {
       field: config.field,
+      isId: config.isId ?? false,
       label: config.label ?? String(config.field),
       searchable: config.searchable ?? false,
+      searchFuzzy: config.searchFuzzy ?? false,
       facet: config.facet,
       facetHelp: config.facetHelp,
       defaultVisible: config.defaultVisible ?? true,
@@ -79,6 +84,16 @@ export function createConfig<
     keyof TData
   >[] = readonly FieldConfig<TData, keyof TData>[],
 >(config: AppConfig<TData, TFields>): AppConfig<TData, TFields> {
+  if (config.fields.length === 0) {
+    throw new Error("At least one field must be defined in config");
+  }
+  const idFields = config.fields.filter((f) => f.isId);
+  if (idFields.length === 0) {
+    throw new Error("No ID field defined in config");
+  }
+  if (idFields.length > 1) {
+    throw new Error("Multiple ID fields defined in config");
+  }
   return config;
 }
 
