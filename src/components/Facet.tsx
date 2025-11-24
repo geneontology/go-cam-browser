@@ -102,6 +102,7 @@ const Facet: React.FC<FacetProps> = ({
         <>
           {isFilterOpen && (
             <Input
+              autoFocus
               mx="xs"
               mb="sm"
               size="sm"
