@@ -76,19 +76,22 @@ function App() {
       }}
       padding="md"
     >
-      <AppShell.Header>
-        <Group h="100%" px="md">
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <Header />
-        </Group>
+      <AppShell.Header className={classes.header}>
+        <Burger
+          opened={opened}
+          onClick={toggle}
+          className={classes.burger}
+          size="sm"
+        />
+        <Header />
       </AppShell.Header>
-      <AppShell.Navbar p="md">
+      <AppShell.Navbar className={classes.navbar}>
         <AppShell.Section grow component={ScrollAreaWrapper}>
-          <Stack gap="md" hiddenFrom="sm">
+          <Stack className={classes.smallScreenHeaderLinks} gap="xs">
             <HeaderLinks />
             <Divider />
           </Stack>
-          <Stack gap="md">
+          <Stack gap="md" mt="md">
             {config.fields
               .filter((field) => visibleFields.includes(field.field))
               .map((field) => (
@@ -130,7 +133,7 @@ function App() {
               </Text>
               {Object.keys(activeFilters).length && (
                 <UnstyledButton onClick={clearAllFacets}>
-                  <Text size="sm" c="blue">
+                  <Text size="sm" c="primary">
                     Clear all filters
                   </Text>
                 </UnstyledButton>

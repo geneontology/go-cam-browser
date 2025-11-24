@@ -9,6 +9,7 @@ const HeaderLinks: React.FC = () => {
       href={link.href}
       target={link.newTab ? "_blank" : undefined}
       rel={link.newTab ? "noopener noreferrer" : undefined}
+      size="sm"
     >
       {link.label}
     </Anchor>

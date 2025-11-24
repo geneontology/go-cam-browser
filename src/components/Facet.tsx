@@ -51,6 +51,12 @@ const Facet: React.FC<FacetProps> = ({
     onFacetClick(field, value);
   };
 
+  const handleClearClick = () => {
+    setIsFilterOpen(false);
+    setValueFilter("");
+    onClearAll();
+  };
+
   if (!facet || Object.keys(facet).length === 0) {
     return null;
   }
@@ -63,7 +69,7 @@ const Facet: React.FC<FacetProps> = ({
           {(facet.type === "text" || facet.type === "array") && (
             <ActionIcon
               variant="white"
-              color={isFilterOpen ? "blue" : "gray"}
+              color={isFilterOpen ? "primary" : "gray"}
               size="sm"
               aria-label="Filter facet values"
               onClick={handleFilterButtonClick}
@@ -91,8 +97,8 @@ const Facet: React.FC<FacetProps> = ({
           )}
         </Group>
         {activeFilter && (
-          <UnstyledButton onClick={onClearAll}>
-            <Text size="xs" c="blue">
+          <UnstyledButton onClick={handleClearClick}>
+            <Text size="xs" c="primary">
               Clear
             </Text>
           </UnstyledButton>
@@ -102,6 +108,7 @@ const Facet: React.FC<FacetProps> = ({
         <>
           {isFilterOpen && (
             <Input
+              autoFocus
               mx="xs"
               mb="sm"
               size="sm"
