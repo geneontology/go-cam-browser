@@ -4,8 +4,8 @@ from pathlib import Path
 from typing import Annotated
 
 import typer
+from glom import glom
 from gocam.datamodel import Model
-from gocam.indexing.Flattener import Flattener
 from gocam.indexing.Indexer import Indexer
 from gocam.translation import MinervaWrapper
 from gocam.utils import remove_species_code_suffix
@@ -45,30 +45,31 @@ def generate_indexed_models(indexer: Indexer, source: Path, destination: Path) -
 
 def generate_search_documents(source: Path, destination: Path) -> None:
     """Generate search documents from indexed Model instances."""
-    array_fields = [
-        "model_activity_enabled_by_genes_label",
-        "model_activity_enabled_by_genes_id",
-        "model_activity_occurs_in_rollup_label",
-        "model_activity_occurs_in_terms_label",
-        "model_activity_occurs_in_terms_id",
-        "model_activity_part_of_rollup_label",
-        "model_activity_part_of_terms_label",
-        "model_activity_part_of_terms_id",
-    ]
-    flattener = Flattener(
-        fields=[
-            "date_modified",
-            "id",
-            "length_of_longest_causal_association_path",
-            "number_of_activities",
-            "number_of_strongly_connected_components",
-            "status",
-            "taxon",
-            "taxon_label",
-            "title",
-        ]
-        + array_fields
-    )
+    spec = {
+        "id": "id",
+        "title": ("title", str.strip),
+        "date_modified": "date_modified",
+        "status": "status",
+        "taxon": "taxon",
+        "taxon_label": "query_index.taxon_label",
+        "length_of_longest_causal_association_path": "query_index.length_of_longest_causal_association_path",
+        "number_of_activities": "query_index.number_of_activities",
+        "number_of_strongly_connected_components": "query_index.number_of_strongly_connected_components",
+        "enabled_by_gene_labels": (
+            "query_index.model_activity_enabled_by_genes",
+            [("label", remove_species_code_suffix)],
+        ),
+        "enabled_by_gene_ids": ("query_index.model_activity_enabled_by_genes", ["id"]),
+        "occurs_in_rollup": ("query_index.model_activity_occurs_in_rollup", ["label"]),
+        "occurs_in_term_labels": (
+            "query_index.model_activity_occurs_in_terms",
+            ["label"],
+        ),
+        "occurs_in_term_ids": ("query_index.model_activity_occurs_in_terms", ["id"]),
+        "part_of_rollup": ("query_index.model_activity_part_of_rollup", ["label"]),
+        "part_of_term_labels": ("query_index.model_activity_part_of_terms", ["label"]),
+        "part_of_term_ids": ("query_index.model_activity_part_of_terms", ["id"]),
+    }
     results = []
     indexed_files = list(source.glob("*.json"))
     for indexed_file in track(
@@ -78,17 +79,7 @@ def generate_search_documents(source: Path, destination: Path) -> None:
             model_json = f.read()
 
         model = Model.model_validate_json(model_json)
-        flattened = flattener.flatten(model)
-        # Ensure required list fields are present and sorted
-        for field in array_fields:
-            if field not in flattened:
-                flattened[field] = []
-
-        genes_label_field = "model_activity_enabled_by_genes_label"
-        flattened[genes_label_field] = [
-            remove_species_code_suffix(label) for label in flattened[genes_label_field]
-        ]
-
+        flattened = glom(model, spec)
         results.append(flattened)
 
     results.sort(key=lambda m: m["date_modified"], reverse=True)

@@ -3,20 +3,21 @@ import type { ReactNode } from "react";
 export type IndexedGoCam = {
   id: string;
   title: string;
+  date_modified: string;
+  status: string;
   taxon?: string | null;
   taxon_label?: string | null;
-  status: string;
-  model_activity_enabled_by_genes_label: string[];
-  model_activity_enabled_by_genes_id: string[];
-  model_activity_occurs_in_rollup_label: string[];
-  model_activity_occurs_in_terms_label: string[];
-  model_activity_occurs_in_terms_id: string[];
-  model_activity_part_of_rollup_label: string[];
-  model_activity_part_of_terms_label: string[];
-  model_activity_part_of_terms_id: string[];
-  number_of_activities: number;
   length_of_longest_causal_association_path?: number | null;
+  number_of_activities: number;
   number_of_strongly_connected_components?: number | null;
+  enabled_by_gene_labels: string[];
+  enabled_by_gene_ids: string[];
+  occurs_in_rollup: string[];
+  occurs_in_term_labels: string[];
+  occurs_in_term_ids: string[];
+  part_of_rollup: string[];
+  part_of_term_labels: string[];
+  part_of_term_ids: string[];
 };
 
 export interface FieldConfig<TData, TField extends keyof TData = keyof TData> {
