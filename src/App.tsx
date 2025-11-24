@@ -130,7 +130,7 @@ function App() {
               </Text>
               {Object.keys(activeFilters).length && (
                 <UnstyledButton onClick={clearAllFacets}>
-                  <Text size="sm" c="blue">
+                  <Text size="sm" c="primary">
                     Clear all filters
                   </Text>
                 </UnstyledButton>

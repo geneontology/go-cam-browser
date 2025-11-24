@@ -63,7 +63,7 @@ const Facet: React.FC<FacetProps> = ({
           {(facet.type === "text" || facet.type === "array") && (
             <ActionIcon
               variant="white"
-              color={isFilterOpen ? "blue" : "gray"}
+              color={isFilterOpen ? "primary" : "gray"}
               size="sm"
               aria-label="Filter facet values"
               onClick={handleFilterButtonClick}
@@ -92,7 +92,7 @@ const Facet: React.FC<FacetProps> = ({
         </Group>
         {activeFilter && (
           <UnstyledButton onClick={onClearAll}>
-            <Text size="xs" c="blue">
+            <Text size="xs" c="primary">
               Clear
             </Text>
           </UnstyledButton>
