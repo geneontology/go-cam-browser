@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import type { FieldConfig, IndexedGoCam } from "../types.ts";
 import {
+  ActionIcon,
   Box,
   Group,
   HoverCard,
+  Input,
   Text,
   ThemeIcon,
   UnstyledButton,
@@ -11,7 +13,7 @@ import {
 import type { FacetCounts, Filter } from "../hooks/useFacets.ts";
 import TextFacetList from "./TextFacetList.tsx";
 import NumericFacetSlider from "./NumericFacetSlider.tsx";
-import { QuestionIcon } from "@phosphor-icons/react";
+import { FunnelSimpleIcon, QuestionIcon } from "@phosphor-icons/react";
 
 interface FacetProps {
   field: FieldConfig<IndexedGoCam>;
@@ -32,6 +34,23 @@ const Facet: React.FC<FacetProps> = ({
   onNumericRangeChange,
   collapsedSize = 10,
 }) => {
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [valueFilter, setValueFilter] = useState("");
+
+  const handleFilterButtonClick = () => {
+    const nextIsFilterOpen = !isFilterOpen;
+    if (!nextIsFilterOpen) {
+      setValueFilter("");
+    }
+    setIsFilterOpen(nextIsFilterOpen);
+  };
+
+  const handleFacetClick = (field: string, value: string) => {
+    setIsFilterOpen(false);
+    setValueFilter("");
+    onFacetClick(field, value);
+  };
+
   if (!facet || Object.keys(facet).length === 0) {
     return null;
   }
@@ -41,6 +60,17 @@ const Facet: React.FC<FacetProps> = ({
       <Group justify="space-between" wrap="nowrap" px="xs">
         <Group gap="xs">
           <Text fw={600}>{field.label}</Text>
+          {(facet.type === "text" || facet.type === "array") && (
+            <ActionIcon
+              variant="white"
+              color={isFilterOpen ? "blue" : "gray"}
+              size="sm"
+              aria-label="Filter facet values"
+              onClick={handleFilterButtonClick}
+            >
+              <FunnelSimpleIcon size="100%" />
+            </ActionIcon>
+          )}
           {field.facetHelp && (
             <HoverCard width={300} shadow="lg">
               <HoverCard.Target>
@@ -69,17 +99,36 @@ const Facet: React.FC<FacetProps> = ({
         )}
       </Group>
       {(facet.type === "text" || facet.type === "array") && (
-        <TextFacetList
-          field={field.field}
-          facet={facet}
-          collapsedSize={collapsedSize}
-          onFacetClick={onFacetClick}
-          activeFilter={
-            activeFilter && activeFilter.type === "text"
-              ? activeFilter
-              : undefined
-          }
-        />
+        <>
+          {isFilterOpen && (
+            <Input
+              mx="xs"
+              mb="sm"
+              size="sm"
+              placeholder="Filter facet values"
+              rightSection={
+                valueFilter ? (
+                  <Input.ClearButton onClick={() => setValueFilter("")} />
+                ) : undefined
+              }
+              rightSectionPointerEvents="auto"
+              value={valueFilter}
+              onChange={(event) => setValueFilter(event.target.value)}
+            />
+          )}
+          <TextFacetList
+            field={field.field}
+            facet={facet}
+            collapsedSize={collapsedSize}
+            onFacetClick={handleFacetClick}
+            activeFilter={
+              activeFilter && activeFilter.type === "text"
+                ? activeFilter
+                : undefined
+            }
+            valueFilter={valueFilter}
+          />
+        </>
       )}
       {facet.type === "numeric" && (
         <NumericFacetSlider
