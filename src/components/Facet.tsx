@@ -51,6 +51,12 @@ const Facet: React.FC<FacetProps> = ({
     onFacetClick(field, value);
   };
 
+  const handleClearClick = () => {
+    setIsFilterOpen(false);
+    setValueFilter("");
+    onClearAll();
+  };
+
   if (!facet || Object.keys(facet).length === 0) {
     return null;
   }
@@ -91,7 +97,7 @@ const Facet: React.FC<FacetProps> = ({
           )}
         </Group>
         {activeFilter && (
-          <UnstyledButton onClick={onClearAll}>
+          <UnstyledButton onClick={handleClearClick}>
             <Text size="xs" c="primary">
               Clear
             </Text>
