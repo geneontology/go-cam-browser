@@ -1,5 +1,5 @@
 import React from "react";
-import { Anchor, Text } from "@mantine/core";
+import { Anchor } from "@mantine/core";
 import { config } from "../config";
 
 const HeaderLinks: React.FC = () => {
