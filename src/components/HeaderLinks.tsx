@@ -1,5 +1,5 @@
 import React from "react";
-import { Anchor } from "@mantine/core";
+import { Anchor, Text } from "@mantine/core";
 import { config } from "../config";
 
 const HeaderLinks: React.FC = () => {
@@ -9,6 +9,7 @@ const HeaderLinks: React.FC = () => {
       href={link.href}
       target={link.newTab ? "_blank" : undefined}
       rel={link.newTab ? "noopener noreferrer" : undefined}
+      size="sm"
     >
       {link.label}
     </Anchor>
