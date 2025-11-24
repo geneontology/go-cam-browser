@@ -106,7 +106,7 @@ const TextFacetList: React.FC<TextFacetListProps> = memo(
         <Collapse in={opened} onTransitionEnd={handleTransitionEnd}>
           {renderCollapsed && facetValues.slice(collapsedSize).map(renderValue)}
         </Collapse>
-        {facetValues.length > collapsedSize && (
+        {Object.keys(facet.values).length > collapsedSize && (
           <UnstyledButton onClick={handleToggleClick}>
             <Text ml="xs" size="xs" c="blue">
               {opened ? "Show Less" : "Show More"}
@@ -118,4 +118,5 @@ const TextFacetList: React.FC<TextFacetListProps> = memo(
   },
 );
 
+TextFacetList.displayName = "TextFacetList";
 export default TextFacetList;
