@@ -53,7 +53,7 @@ export const config = createConfig<IndexedGoCam>({
       ),
     }),
     goCamField({
-      field: "model_activity_part_of_rollup_label",
+      field: "part_of_rollup",
       label: "Biological Process",
       facet: "array",
       facetHelp:
@@ -62,13 +62,13 @@ export const config = createConfig<IndexedGoCam>({
         "terms for each GO-CAM is displayed in the 'Biological Process' field in the results.",
       render: (_, gocam) => (
         <TermLinkList
-          ids={gocam.model_activity_part_of_terms_id}
-          labels={gocam.model_activity_part_of_terms_label}
+          ids={gocam.part_of_term_ids}
+          labels={gocam.part_of_term_labels}
         />
       ),
     }),
     goCamField({
-      field: "model_activity_occurs_in_rollup_label",
+      field: "occurs_in_rollup",
       label: "Cellular Component",
       facet: "array",
       facetHelp:
@@ -77,21 +77,18 @@ export const config = createConfig<IndexedGoCam>({
         "terms for each GO-CAM is displayed in the 'Cellular Component' field in the results.",
       render: (_, gocam) => (
         <TermLinkList
-          ids={gocam.model_activity_occurs_in_terms_id}
-          labels={gocam.model_activity_occurs_in_terms_label}
+          ids={gocam.occurs_in_term_ids}
+          labels={gocam.occurs_in_term_labels}
         />
       ),
     }),
     goCamField({
-      field: "model_activity_enabled_by_genes_label",
+      field: "enabled_by_gene_labels",
       label: "Genes",
       searchable: true,
       facet: "array",
-      render: (value, gocam) => (
-        <TermLinkList
-          ids={gocam.model_activity_enabled_by_genes_id}
-          labels={value}
-        />
+      render: (gene_labels, gocam) => (
+        <TermLinkList ids={gocam.enabled_by_gene_ids} labels={gene_labels} />
       ),
     }),
     goCamField({
