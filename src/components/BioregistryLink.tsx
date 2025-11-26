@@ -1,5 +1,5 @@
 import React from "react";
-import { Anchor } from "@mantine/core";
+import ExternalLink from "./ExternalLink.tsx";
 
 interface BioregistryLinkProps extends React.PropsWithChildren {
   id?: string | null;
@@ -10,15 +10,9 @@ const BioregistryLink: React.FC<BioregistryLinkProps> = ({ id, children }) => {
     return null;
   }
   return (
-    <Anchor
-      href={`https://bioregistry.io/${id}`}
-      target="_blank"
-      rel="noreferrer noopener"
-      inherit
-      title={id}
-    >
+    <ExternalLink href={`https://bioregistry.io/${id}`} title={id}>
       {children || id}
-    </Anchor>
+    </ExternalLink>
   );
 };
 

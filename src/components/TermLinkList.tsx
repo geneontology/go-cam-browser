@@ -1,5 +1,6 @@
 import React from "react";
 import BioregistryLink from "./BioregistryLink.tsx";
+import CommaSeparated from "./CommaSeparated.tsx";
 
 interface TermLinkListProps {
   ids: string[];
@@ -14,12 +15,12 @@ const TermLinkList: React.FC<TermLinkListProps> = ({ ids, labels }) => {
   })).sort((a, b) =>
     a.label.toLocaleLowerCase().localeCompare(b.label.toLocaleLowerCase()),
   );
-  return terms.map((term, idx) => (
-    <React.Fragment key={term.id}>
-      {idx > 0 && ", "}
-      <BioregistryLink id={term.id}>{term.label}</BioregistryLink>
-    </React.Fragment>
+  const links = terms.map((term) => (
+    <BioregistryLink key={term.id} id={term.id}>
+      {term.label}
+    </BioregistryLink>
   ));
+  return <CommaSeparated items={links} />;
 };
 
 export default TermLinkList;

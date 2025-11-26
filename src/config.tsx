@@ -1,6 +1,8 @@
 import { createConfig, createFieldConfig, type IndexedGoCam } from "./types.ts";
 import BioregistryLink from "./components/BioregistryLink.tsx";
 import TermLinkList from "./components/TermLinkList.tsx";
+import CommaSeparated from "./components/CommaSeparated.tsx";
+import ExternalLink from "./components/ExternalLink.tsx";
 
 const goCamField = createFieldConfig<IndexedGoCam>();
 
@@ -89,6 +91,21 @@ export const config = createConfig<IndexedGoCam>({
       facet: "array",
       render: (gene_labels, gocam) => (
         <TermLinkList ids={gocam.enabled_by_gene_ids} labels={gene_labels} />
+      ),
+    }),
+    goCamField({
+      field: "provided_by_labels",
+      label: "Provided By",
+      facet: "array",
+      defaultVisible: false,
+      render: (provider_labels, gocam) => (
+        <CommaSeparated
+          items={provider_labels.map((label, idx) => (
+            <ExternalLink key={label} href={gocam.provided_by_ids[idx]}>
+              {label}
+            </ExternalLink>
+          ))}
+        />
       ),
     }),
     goCamField({
