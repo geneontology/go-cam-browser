@@ -69,6 +69,8 @@ def generate_search_documents(source: Path, destination: Path) -> None:
         "part_of_rollup": ("query_index.model_activity_part_of_rollup", ["label"]),
         "part_of_term_labels": ("query_index.model_activity_part_of_terms", ["label"]),
         "part_of_term_ids": ("query_index.model_activity_part_of_terms", ["id"]),
+        "provided_by_labels": ("query_index.flattened_provided_by", ["label"]),
+        "provided_by_ids": ("query_index.flattened_provided_by", ["id"]),
     }
     results = []
     indexed_files = list(source.glob("*.json"))

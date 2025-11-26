@@ -18,6 +18,8 @@ export type IndexedGoCam = {
   part_of_rollup: string[];
   part_of_term_labels: string[];
   part_of_term_ids: string[];
+  provided_by_labels: string[];
+  provided_by_ids: string[];
 };
 
 export interface FieldConfig<TData, TField extends keyof TData = keyof TData> {
