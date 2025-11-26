@@ -101,7 +101,10 @@ export const config = createConfig<IndexedGoCam>({
       render: (provider_labels, gocam) => (
         <CommaSeparated
           items={provider_labels.map((label, idx) => (
-            <ExternalLink key={label} href={gocam.provided_by_ids[idx]}>
+            <ExternalLink
+              key={gocam.provided_by_ids[idx]}
+              href={gocam.provided_by_ids[idx]}
+            >
               {label}
             </ExternalLink>
           ))}
