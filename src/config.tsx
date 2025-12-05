@@ -48,7 +48,7 @@ export const config = createConfig<IndexedGoCam>({
     }),
     goCamField({
       field: "taxon_label",
-      label: "Taxon",
+      label: "Organism",
       facet: "text",
       render: (value, row) => (
         <BioregistryLink id={row.taxon}>{value}</BioregistryLink>
@@ -95,7 +95,7 @@ export const config = createConfig<IndexedGoCam>({
     }),
     goCamField({
       field: "provided_by_labels",
-      label: "Provided By",
+      label: "Contributor",
       facet: "array",
       defaultVisible: false,
       render: (provider_labels, gocam) => (
