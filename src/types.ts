@@ -101,7 +101,7 @@ export function createConfig<
 }
 
 export const ResultsDisplayType = {
-  LIST: "List",
+  CARDS: "Cards",
   TABLE: "Table",
 } as const;
 
