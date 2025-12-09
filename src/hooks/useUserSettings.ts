@@ -17,7 +17,7 @@ export const useUserSettings = create<UserSettingsState>()(
       visibleFields: config.fields
         .filter((field) => field.defaultVisible)
         .map((field) => field.field),
-      resultsDisplayType: ResultsDisplayType.LIST,
+      resultsDisplayType: ResultsDisplayType.CARDS,
       toggleField: (field) =>
         set((state) => ({
           visibleFields: state.visibleFields.includes(field)
@@ -28,7 +28,7 @@ export const useUserSettings = create<UserSettingsState>()(
     }),
     {
       name: "GO_CAM_BROWSER_USER_SETTINGS",
-      version: 1,
+      version: 2,
     },
   ),
 );

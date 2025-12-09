@@ -3,7 +3,7 @@ import { Card, SimpleGrid, Table } from "@mantine/core";
 import type { ResultsDisplayCommonProps } from "../types.ts";
 import { TH_BACKGROUND } from "../constants.ts";
 
-const ResultsList: React.FC<ResultsDisplayCommonProps> = ({
+const ResultsCards: React.FC<ResultsDisplayCommonProps> = ({
   displayGoCams,
   displayFields,
 }) => {
@@ -33,4 +33,4 @@ const ResultsList: React.FC<ResultsDisplayCommonProps> = ({
   );
 };
 
-export default ResultsList;
+export default ResultsCards;

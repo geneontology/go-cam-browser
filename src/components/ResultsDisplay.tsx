@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { type ResultsDisplayProps, ResultsDisplayType } from "../types.ts";
 import { Box, Button } from "@mantine/core";
-import ResultsList from "./ResultsList.tsx";
+import ResultsCards from "./ResultsCards.tsx";
 import ResultsTable from "./ResultsTable.tsx";
 import { RESULTS_PAGE_SIZE } from "../constants.ts";
 import useUserSettings from "../hooks/useUserSettings.ts";
@@ -26,8 +26,8 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
     <>
       {displayIndexes.length > 0 && (
         <Box mb="lg">
-          {resultsDisplayType === ResultsDisplayType.LIST && (
-            <ResultsList
+          {resultsDisplayType === ResultsDisplayType.CARDS && (
+            <ResultsCards
               displayFields={displayFields}
               displayGoCams={displayGoCams}
             />
