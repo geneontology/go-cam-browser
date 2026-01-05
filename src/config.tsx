@@ -50,6 +50,7 @@ export const config = createConfig<IndexedGoCam>({
       field: "taxon_label",
       label: "Organism",
       facet: "text",
+      facetHelp: "Filter by the primary organism the GO-CAM is about.",
       render: (value, row) => (
         <BioregistryLink id={row.taxon}>{value}</BioregistryLink>
       ),
@@ -58,10 +59,17 @@ export const config = createConfig<IndexedGoCam>({
       field: "part_of_rollup",
       label: "Biological Process",
       facet: "array",
-      facetHelp:
-        "The facet values listed here are higher-level GO Biological Process terms. Selecting one " +
-        "will filter models annotated to any of its descendant terms. The full list of specific " +
-        "terms for each GO-CAM is displayed in the 'Biological Process' field in the results.",
+      facetHelp: (
+        <>
+          Select a term from the Biological Process terms of the{" "}
+          <ExternalLink href="https://current.geneontology.org/ontology/subsets/goslim_generic.obo">
+            Generic GO subset
+          </ExternalLink>{" "}
+          to filter models annotated to this or any of its descendant terms.
+          Note that the results displayed show the specific GO term(s) annotated
+          in each GO-CAM.
+        </>
+      ),
       render: (_, gocam) => (
         <TermLinkList
           ids={gocam.part_of_term_ids}
@@ -73,10 +81,17 @@ export const config = createConfig<IndexedGoCam>({
       field: "occurs_in_rollup",
       label: "Cellular Component",
       facet: "array",
-      facetHelp:
-        "The facet values listed here are higher-level GO Cellular Component terms. Selecting one " +
-        "will filter models annotated to any of its descendant terms. The full list of specific " +
-        "terms for each GO-CAM is displayed in the 'Cellular Component' field in the results.",
+      facetHelp: (
+        <>
+          Select a term from the Cellular Component terms of the{" "}
+          <ExternalLink href="https://current.geneontology.org/ontology/subsets/goslim_generic.obo">
+            Generic GO subset
+          </ExternalLink>{" "}
+          to filter models annotated to this or any of its descendant terms.
+          Note that the results displayed show the specific GO term(s) annotated
+          in each GO-CAM.
+        </>
+      ),
       render: (_, gocam) => (
         <TermLinkList
           ids={gocam.occurs_in_term_ids}
@@ -89,6 +104,11 @@ export const config = createConfig<IndexedGoCam>({
       label: "Genes",
       searchable: true,
       facet: "array",
+      facetHelp: `Select a gene to filter models containing at least one 
+        activity enabled by that gene. Note that this facet contains gene names 
+        for all organisms with GO-CAM models. Make sure that the results 
+        correspond to the gene you are looking for and consider applying an 
+        Organism filter first.`,
       render: (gene_labels, gocam) => (
         <TermLinkList ids={gocam.enabled_by_gene_ids} labels={gene_labels} />
       ),
@@ -97,6 +117,7 @@ export const config = createConfig<IndexedGoCam>({
       field: "provided_by_labels",
       label: "Contributor",
       facet: "array",
+      facetHelp: `Filter by groups which contributed information to the GO-CAM.`,
       defaultVisible: false,
       render: (provider_labels, gocam) => (
         <CommaSeparated
@@ -115,18 +136,30 @@ export const config = createConfig<IndexedGoCam>({
       field: "number_of_activities",
       label: "Number of Activities",
       facet: "numeric",
+      facetHelp: `Filter by the number of activity units in the GO-CAM. An 
+        activity unit contains at least one molecular function which is enabled 
+        by a gene product or a protein complex.`,
       defaultVisible: false,
     }),
     goCamField({
       field: "length_of_longest_causal_association_path",
       label: "Longest Causal Path",
       facet: "numeric",
+      facetHelp: `Filter by the length of the longest causal association path in 
+        the GO-CAM. This is the maximum number of steps that can be made between
+        any two activities along causal associations.`,
       defaultVisible: false,
     }),
     goCamField({
       field: "number_of_strongly_connected_components",
       label: "Strongly Connected Components",
       facet: "numeric",
+      facetHelp: `Filter by the number of strongly connected components in the 
+        GO-CAM. A strongly connected component is a set of activity units in the
+        GO-CAM that are connected via causal associations. A GO-CAM can consist 
+        of more than one strongly connected component if one set of connected 
+        activities is not reachable from another set of connected activities via 
+        causal associations.`,
       defaultVisible: false,
     }),
   ],
