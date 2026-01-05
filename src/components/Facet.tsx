@@ -63,44 +63,45 @@ const Facet: React.FC<FacetProps> = ({
 
   return (
     <Box mb="lg">
-      <Group justify="space-between" wrap="nowrap" px="xs">
-        <Group gap="xs">
-          <Text fw={600}>{field.label}</Text>
-          {(facet.type === "text" || facet.type === "array") && (
-            <ActionIcon
-              variant="white"
-              color={isFilterOpen ? "primary" : "gray"}
-              size="sm"
-              aria-label="Filter facet values"
-              onClick={handleFilterButtonClick}
-            >
-              <FunnelSimpleIcon size="100%" />
-            </ActionIcon>
-          )}
-          {field.facetHelp && (
-            <HoverCard width={300} shadow="lg">
-              <HoverCard.Target>
-                <ThemeIcon
-                  variant="white"
-                  color="gray"
-                  size="sm"
-                  aria-label="Help information"
-                  role="button"
-                >
-                  <QuestionIcon size="100%" />
-                </ThemeIcon>
-              </HoverCard.Target>
-              <HoverCard.Dropdown>
-                <Text size="sm">{field.facetHelp}</Text>
-              </HoverCard.Dropdown>
-            </HoverCard>
-          )}
-        </Group>
+      <Group gap="xs" wrap="nowrap" px="xs">
+        <Text fw={600}>{field.label}</Text>
+        {(facet.type === "text" || facet.type === "array") && (
+          <ActionIcon
+            variant="white"
+            color={isFilterOpen ? "primary" : "gray"}
+            size="sm"
+            aria-label="Filter facet values"
+            onClick={handleFilterButtonClick}
+          >
+            <FunnelSimpleIcon size="100%" />
+          </ActionIcon>
+        )}
+        {field.facetHelp && (
+          <HoverCard width={300} shadow="lg">
+            <HoverCard.Target>
+              <ThemeIcon
+                variant="white"
+                color="gray"
+                size="sm"
+                aria-label="Help information"
+                role="button"
+              >
+                <QuestionIcon size="100%" />
+              </ThemeIcon>
+            </HoverCard.Target>
+            <HoverCard.Dropdown>
+              <Text size="sm">{field.facetHelp}</Text>
+            </HoverCard.Dropdown>
+          </HoverCard>
+        )}
         {activeFilter && (
-          <UnstyledButton onClick={handleClearClick}>
-            <Text size="xs" c="primary">
-              Clear
-            </Text>
+          <UnstyledButton
+            ml="auto"
+            fz="xs"
+            c="primary"
+            onClick={handleClearClick}
+          >
+            Clear
           </UnstyledButton>
         )}
       </Group>
