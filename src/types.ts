@@ -30,6 +30,9 @@ export interface FieldConfig<TData, TField extends keyof TData = keyof TData> {
   searchFuzzy: boolean;
   facet?: "text" | "array" | "numeric";
   facetHelp?: ReactNode;
+  // If facet is defined, this is the key that will be used in the URL for this facet. If not
+  // defined, the field name will be used.
+  facetUrlKey?: string;
   defaultVisible: boolean;
   render(value: TData[TField], row: TData): ReactNode;
 }
@@ -69,6 +72,7 @@ export function createFieldConfig<TData>() {
       searchFuzzy: config.searchFuzzy ?? false,
       facet: config.facet,
       facetHelp: config.facetHelp,
+      facetUrlKey: config.facetUrlKey,
       defaultVisible: config.defaultVisible ?? true,
       render(value: TData[TField], row: TData) {
         if (config.render) {
@@ -96,6 +100,18 @@ export function createConfig<
   }
   if (idFields.length > 1) {
     throw new Error("Multiple ID fields defined in config");
+  }
+  const facetUrlKeys = new Set<string>();
+  for (const field of config.fields) {
+    if (field.facetUrlKey === undefined) {
+      continue;
+    }
+    if (facetUrlKeys.has(field.facetUrlKey)) {
+      throw new Error(
+        `Duplicate facetUrlKey "${field.facetUrlKey}" found in config`,
+      );
+    }
+    facetUrlKeys.add(field.facetUrlKey);
   }
   return config;
 }

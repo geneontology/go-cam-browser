@@ -25,6 +25,7 @@ import UserSettingsMenu from "./components/UserSettingsMenu.tsx";
 import HeaderLinks from "./components/HeaderLinks.tsx";
 import Footer from "./components/Footer.tsx";
 import ResultsDisplay from "./components/ResultsDisplay.tsx";
+import { useUrlState } from "./hooks/useUrlState.ts";
 
 import classes from "./App.module.css";
 
@@ -36,15 +37,13 @@ function App() {
   const [opened, { toggle }] = useDisclosure();
   const targetRef = useRef<HTMLDivElement>(null);
   const visibleFields = useUserSettings((state) => state.visibleFields);
+  const { search, setSearch, filters, setFilters } = useUrlState();
 
   const { isPending, isError, data, error } = useQueryData();
 
-  const {
-    results: searchResults,
-    isIndexing,
-    search,
-  } = useSearch({
+  const { results: searchResults, isIndexing } = useSearch({
     data: data,
+    query: search,
   });
 
   const {
@@ -58,6 +57,8 @@ function App() {
   } = useFacets({
     data: searchResults,
     fields: config.fields,
+    activeFilters: filters,
+    setActiveFilters: setFilters,
   });
 
   useEffect(() => {
@@ -112,7 +113,11 @@ function App() {
       <AppShell.Main className={classes.main}>
         <div className={classes.mainContent}>
           <Group align="center" mb="md">
-            <SearchInput onSearch={search} disabled={isIndexing || isPending} />
+            <SearchInput
+              value={search}
+              onSearch={setSearch}
+              disabled={isIndexing || isPending}
+            />
             <UserSettingsMenu />
           </Group>
           {isPending && (

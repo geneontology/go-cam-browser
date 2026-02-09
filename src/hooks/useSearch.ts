@@ -12,6 +12,7 @@ const SEARCH_FIELDS = config.fields.filter((f) => f.searchable);
 
 interface UseSearchOptions<TData> {
   data?: TData[];
+  query?: string;
 }
 
 interface UseSearchResult<TData> {
@@ -23,7 +24,7 @@ interface UseSearchResult<TData> {
 export default function useSearch<TData extends DocumentData>(
   options: UseSearchOptions<TData>,
 ) {
-  const { data } = options;
+  const { data, query } = options;
   const [isIndexing, setIsIndexing] = useState<boolean>(false);
   const [results, setResults] = useState<TData[]>([]);
 
@@ -74,6 +75,13 @@ export default function useSearch<TData extends DocumentData>(
     },
     [data, index],
   );
+
+  useEffect(() => {
+    if (isIndexing) {
+      return;
+    }
+    void search(query || "");
+  }, [query, data, index, isIndexing, search]);
 
   return {
     isIndexing: isIndexing,
