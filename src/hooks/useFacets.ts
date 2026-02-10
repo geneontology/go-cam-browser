@@ -1,5 +1,5 @@
 import type { FieldConfig } from "../types.ts";
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 
 export interface TextFacet {
   type: "text" | "array";
@@ -131,6 +131,10 @@ function applyNumericFilters<TData>(
 interface UseFaceterOptions<TData> {
   data: TData[];
   fields: readonly FieldConfig<TData, keyof TData>[];
+  activeFilters: ActiveFilters;
+  setActiveFilters: (
+    filters: ActiveFilters | ((prev: ActiveFilters) => ActiveFilters),
+  ) => Promise<unknown>;
 }
 
 export interface UseFaceterResult {
@@ -151,8 +155,7 @@ export interface UseFaceterResult {
 export default function useFacets<TData>(
   options: UseFaceterOptions<TData>,
 ): UseFaceterResult {
-  const { data, fields } = options;
-  const [activeFilters, setActiveFilters] = useState<ActiveFilters>({});
+  const { data, fields, activeFilters, setActiveFilters } = options;
 
   const facetFields = useMemo(() => fields.filter((f) => f.facet), [fields]);
   const facetFieldMap = useMemo(() => {
@@ -282,7 +285,7 @@ export default function useFacets<TData>(
 
   const toggleFacet = useCallback(
     (field: string, value: string) => {
-      setActiveFilters((prev) => {
+      void setActiveFilters((prev) => {
         const fieldFilter = prev[field];
         const fieldFacet = facetFieldMap[field]?.facet;
         const next: ActiveFilters = { ...prev };
@@ -341,12 +344,12 @@ export default function useFacets<TData>(
         return next;
       });
     },
-    [facetFieldMap],
+    [facetFieldMap, setActiveFilters],
   );
 
   const setNumericRange = useCallback(
     (field: string, min: number | null, max: number | null) => {
-      setActiveFilters((prev) => {
+      void setActiveFilters((prev) => {
         const fieldFacet = facetFieldMap[field]?.facet;
         if (fieldFacet !== "numeric") {
           return prev;
@@ -367,12 +370,12 @@ export default function useFacets<TData>(
         return next;
       });
     },
-    [facetFieldMap],
+    [facetFieldMap, setActiveFilters],
   );
 
   const clearNumericRange = useCallback(
     (field: string) => {
-      setActiveFilters((prev) => {
+      void setActiveFilters((prev) => {
         if (!prev[field]) {
           return prev;
         }
@@ -385,23 +388,26 @@ export default function useFacets<TData>(
         return next;
       });
     },
-    [facetFieldMap],
+    [facetFieldMap, setActiveFilters],
   );
 
-  const clearFacet = useCallback((field: string) => {
-    setActiveFilters((prev) => {
-      if (!(field in prev)) {
-        return prev;
-      }
-      const next = { ...prev };
-      delete next[field];
-      return next;
-    });
-  }, []);
+  const clearFacet = useCallback(
+    (field: string) => {
+      void setActiveFilters((prev) => {
+        if (!(field in prev)) {
+          return prev;
+        }
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
+    },
+    [setActiveFilters],
+  );
 
   const clearAllFacets = useCallback(() => {
-    setActiveFilters({});
-  }, []);
+    void setActiveFilters({});
+  }, [setActiveFilters]);
 
   return {
     facets,

@@ -51,6 +51,7 @@ export const config = createConfig<IndexedGoCam>({
       label: "Organism",
       facet: "text",
       facetHelp: "Filter by the primary organism the GO-CAM is about.",
+      facetUrlKey: "organism",
       render: (value, row) => (
         <BioregistryLink id={row.taxon}>{value}</BioregistryLink>
       ),
@@ -70,6 +71,7 @@ export const config = createConfig<IndexedGoCam>({
           in each GO-CAM.
         </>
       ),
+      facetUrlKey: "biological_process",
       render: (_, gocam) => (
         <TermLinkList
           ids={gocam.part_of_term_ids}
@@ -92,6 +94,7 @@ export const config = createConfig<IndexedGoCam>({
           in each GO-CAM.
         </>
       ),
+      facetUrlKey: "cellular_component",
       render: (_, gocam) => (
         <TermLinkList
           ids={gocam.occurs_in_term_ids}
@@ -109,6 +112,7 @@ export const config = createConfig<IndexedGoCam>({
         for all organisms with GO-CAM models. Make sure that the results 
         correspond to the gene you are looking for and consider applying an 
         Organism filter first.`,
+      facetUrlKey: "gene",
       render: (gene_labels, gocam) => (
         <TermLinkList ids={gocam.enabled_by_gene_ids} labels={gene_labels} />
       ),
@@ -118,6 +122,7 @@ export const config = createConfig<IndexedGoCam>({
       label: "Contributor",
       facet: "array",
       facetHelp: `Filter by groups which contributed information to the GO-CAM.`,
+      facetUrlKey: "contributor",
       defaultVisible: false,
       render: (provider_labels, gocam) => (
         <CommaSeparated
@@ -139,6 +144,7 @@ export const config = createConfig<IndexedGoCam>({
       facetHelp: `Filter by the number of activity units in the GO-CAM. An 
         activity unit contains at least one molecular function which is enabled 
         by a gene product or a protein complex.`,
+      facetUrlKey: "number_of_activities",
       defaultVisible: false,
     }),
     goCamField({
@@ -148,6 +154,7 @@ export const config = createConfig<IndexedGoCam>({
       facetHelp: `Filter by the length of the longest causal association path in 
         the GO-CAM. This is the maximum number of steps that can be made between
         any two activities along causal associations.`,
+      facetUrlKey: "longest_causal_path",
       defaultVisible: false,
     }),
     goCamField({
@@ -160,6 +167,7 @@ export const config = createConfig<IndexedGoCam>({
         of more than one strongly connected component if one set of connected 
         activities is not reachable from another set of connected activities via 
         causal associations.`,
+      facetUrlKey: "strongly_connected_components",
       defaultVisible: false,
     }),
   ],

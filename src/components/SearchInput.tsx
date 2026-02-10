@@ -1,25 +1,38 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Input, TextInput } from "@mantine/core";
 import { useDebouncedCallback } from "@mantine/hooks";
 import { config } from "../config.tsx";
 
 interface SearchInputProps {
+  value: string;
   disabled?: boolean;
-  onSearch: (query: string) => Promise<void>;
+  onSearch: (query: string) => Promise<unknown>;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({ disabled, onSearch }) => {
-  const [search, setSearch] = useState("");
+const SearchInput: React.FC<SearchInputProps> = ({
+  value,
+  disabled,
+  onSearch,
+}) => {
+  const [localSearch, setLocalSearch] = useState(value);
+  const prevValueRef = useRef(value);
+
+  // Sync local search state with external value changes
+  if (value !== prevValueRef.current) {
+    prevValueRef.current = value;
+    setLocalSearch(value);
+  }
 
   const handleSearch = useDebouncedCallback(onSearch, 300);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.currentTarget.value);
-    handleSearch(event.currentTarget.value);
+    const val = event.currentTarget.value;
+    setLocalSearch(val);
+    handleSearch(val);
   };
 
   const handleClear = () => {
-    setSearch("");
+    setLocalSearch("");
     void onSearch("");
   };
 
@@ -29,11 +42,11 @@ const SearchInput: React.FC<SearchInputProps> = ({ disabled, onSearch }) => {
       size="lg"
       flex="1"
       placeholder={config.searchPlaceholder}
-      value={search}
+      value={localSearch}
       disabled={disabled}
       onChange={handleChange}
       rightSection={
-        search !== "" ? (
+        localSearch !== "" ? (
           <Input.ClearButton onClick={handleClear} variant="subtle" />
         ) : undefined
       }
