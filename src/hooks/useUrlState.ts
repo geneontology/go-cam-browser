@@ -145,6 +145,11 @@ const parseAsFilters = (
         .filter((v) => v !== null);
     },
     eq(a, b) {
+      // The equality function is used to determine if the default value can be
+      // removed from the URL (clearOnDefault: true). Since the default value is
+      // an empty object, that is the main case we want to handle here. For
+      // non-empty objects, we can just compare by === since whether they are
+      // semantically equivalent doesn't matter.
       const aKeys = Object.keys(a);
       const bKeys = Object.keys(b);
       if (aKeys.length === 0 && bKeys.length === 0) {
