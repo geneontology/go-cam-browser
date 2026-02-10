@@ -82,7 +82,12 @@ const parseAsTextFilter = createParser<TextFilter>({
  */
 const parseAsKeyValue = createParser<{ key: string; value: string }>({
   parse: (value) => {
-    const [urlKey, val] = value.split(":");
+    const index = value.indexOf(":");
+    if (index === -1) {
+      return null;
+    }
+    const urlKey = value.slice(0, index);
+    const val = value.slice(index + 1);
     if (!urlKey || !val || !(urlKey in urlKeyToFieldName)) {
       return null;
     }
