@@ -39,11 +39,11 @@ const urlKeyToFieldName = Object.fromEntries(
 
 /**
  * Parser for numeric filters in the URL.
- * Expects a comma-separated string "min,max".
+ * Expects a tilde-separated string "min~max".
  */
 const parseAsNumericFilter = createParser<NumericFilter>({
   parse: (value) => {
-    const split = value.split(",");
+    const split = value.split("~");
     if (split.length !== 2) {
       return null;
     }
@@ -55,24 +55,24 @@ const parseAsNumericFilter = createParser<NumericFilter>({
     return { type: "numeric", min, max };
   },
   serialize: (value) => {
-    return `${value.min},${value.max}`;
+    return `${value.min}~${value.max}`;
   },
 });
 
 /**
  * Parser for text filters in the URL.
- * Expects a comma-separated string of values.
+ * Expects a tilde-separated string of values.
  */
 const parseAsTextFilter = createParser<TextFilter>({
   parse: (value) => {
-    const values = value.split(",").filter((v) => v.trim() !== "");
+    const values = value.split("~").filter((v) => v.trim() !== "");
     if (values.length === 0) {
       return null;
     }
     return { type: "text", values: new Set(values) };
   },
   serialize: (value) => {
-    return Array.from(value.values).sort().join(",");
+    return Array.from(value.values).sort().join("~");
   },
 });
 
