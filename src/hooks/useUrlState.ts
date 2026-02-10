@@ -72,7 +72,7 @@ const parseAsTextFilter = createParser<TextFilter>({
     return { type: "text", values: new Set(values) };
   },
   serialize: (value) => {
-    return Array.from(value.values).join(",");
+    return Array.from(value.values).sort().join(",");
   },
 });
 
