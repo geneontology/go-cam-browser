@@ -88,7 +88,7 @@ const parseAsKeyValue = createParser<{ key: string; value: string }>({
     }
     const urlKey = value.slice(0, index);
     const val = value.slice(index + 1);
-    if (!urlKey || !val || !(urlKey in urlKeyToFieldName)) {
+    if (!urlKey || !val) {
       return null;
     }
     const fieldName = urlKeyToFieldName[urlKey] || urlKey;
