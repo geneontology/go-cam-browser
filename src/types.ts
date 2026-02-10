@@ -111,6 +111,15 @@ export function createConfig<
         `Duplicate facetUrlKey "${field.facetUrlKey}" found in config`,
       );
     }
+    if (
+      field.facetUrlKey.trim() === "" ||
+      field.facetUrlKey.includes(":") ||
+      field.facetUrlKey.includes(",")
+    ) {
+      throw new Error(
+        `Invalid facetUrlKey "${field.facetUrlKey}" found in config. facetUrlKey must be non-empty and cannot contain ":" or "," characters.`,
+      );
+    }
     facetUrlKeys.add(field.facetUrlKey);
   }
   return config;
