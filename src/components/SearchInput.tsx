@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Input, TextInput } from "@mantine/core";
 import { useDebouncedCallback } from "@mantine/hooks";
 import { config } from "../config.tsx";
@@ -15,12 +15,12 @@ const SearchInput: React.FC<SearchInputProps> = ({
   onSearch,
 }) => {
   const [localSearch, setLocalSearch] = useState(value);
-  const [prevValue, setPrevValue] = useState(value);
+  const prevValueRef = useRef(value);
 
   // Sync local search state with external value changes
-  if (value !== prevValue) {
+  if (value !== prevValueRef.current) {
+    prevValueRef.current = value;
     setLocalSearch(value);
-    setPrevValue(value);
   }
 
   const handleSearch = useDebouncedCallback(onSearch, 300);
