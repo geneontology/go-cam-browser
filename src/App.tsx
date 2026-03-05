@@ -43,6 +43,7 @@ function App() {
 
   const { results: searchResults, isIndexing } = useSearch({
     data: data,
+    fields: config.fields,
     query: search,
   });
 
