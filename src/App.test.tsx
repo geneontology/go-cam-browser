@@ -5,15 +5,7 @@ import {
   fireEvent,
   within,
 } from "@testing-library/react";
-import {
-  describe,
-  it,
-  expect,
-  beforeAll,
-  afterEach,
-  afterAll,
-  vi,
-} from "vitest";
+import { describe, it, expect, beforeAll, afterEach, afterAll } from "vitest";
 import { setupServer } from "msw/node";
 import { http, HttpResponse } from "msw";
 import App from "./App";
@@ -21,10 +13,8 @@ import { MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { config } from "./config";
 import { NuqsTestingAdapter } from "nuqs/adapters/testing";
-import * as useQueryDataModule from "./hooks/useQueryData";
 import theme from "./theme";
 import { type IndexedGoCam } from "./types";
-import { type UseQueryResult } from "@tanstack/react-query";
 
 const mockData: IndexedGoCam[] = [
   {
@@ -45,6 +35,8 @@ const mockData: IndexedGoCam[] = [
     occurs_in_term_ids: ["GO:X"],
     date_modified: "2023-01-01",
     status: "production",
+    length_of_longest_causal_association_path: 3,
+    number_of_strongly_connected_components: 1,
   },
   {
     id: "gomodel:2",
@@ -64,22 +56,24 @@ const mockData: IndexedGoCam[] = [
     occurs_in_term_ids: ["GO:Y"],
     date_modified: "2023-02-01",
     status: "production",
+    length_of_longest_causal_association_path: 5,
+    number_of_strongly_connected_components: 2,
   },
 ];
 
 const server = setupServer(
-  http.get("*", ({ request }) => {
-    if (request.url.endsWith("data.json")) {
-      return HttpResponse.json(mockData);
-    }
-    return undefined;
+  http.get(config.dataUrl, () => {
+    return HttpResponse.json(mockData);
   }),
 );
 
-beforeAll(() => server.listen());
+beforeAll(() =>
+  server.listen({
+    onUnhandledRequest: "error",
+  }),
+);
 afterEach(() => {
   server.resetHandlers();
-  vi.clearAllMocks();
 });
 afterAll(() => server.close());
 
@@ -103,44 +97,8 @@ const renderApp = () => {
   );
 };
 
-// Represents the value returned by useQuery after successfully loading data.
-const mockSuccessfulQueryResult = (
-  data: IndexedGoCam[],
-): UseQueryResult<IndexedGoCam[], Error> => ({
-  data,
-  isPending: false,
-  isError: false,
-  isEnabled: true,
-  error: null,
-  fetchStatus: "idle",
-  status: "success",
-  isLoading: false,
-  isFetching: false,
-  isSuccess: true,
-  dataUpdatedAt: Date.now(),
-  errorUpdatedAt: 0,
-  failureCount: 0,
-  failureReason: null,
-  errorUpdateCount: 0,
-  isFetched: true,
-  isFetchedAfterMount: true,
-  isInitialLoading: false,
-  isLoadingError: false,
-  isPaused: false,
-  isPlaceholderData: false,
-  isRefetchError: false,
-  isRefetching: false,
-  isStale: false,
-  refetch: vi.fn(),
-  promise: Promise.resolve(data),
-});
-
 describe("App Integration", () => {
   it("loads data and renders results", async () => {
-    vi.spyOn(useQueryDataModule, "default").mockReturnValue(
-      mockSuccessfulQueryResult(mockData),
-    );
-
     renderApp();
 
     await waitFor(() => {
@@ -150,10 +108,6 @@ describe("App Integration", () => {
   });
 
   it("filters results when searching", async () => {
-    vi.spyOn(useQueryDataModule, "default").mockReturnValue(
-      mockSuccessfulQueryResult(mockData),
-    );
-
     renderApp();
 
     await waitFor(() =>
@@ -172,10 +126,6 @@ describe("App Integration", () => {
   });
 
   it("filters results when clicking a facet", async () => {
-    vi.spyOn(useQueryDataModule, "default").mockReturnValue(
-      mockSuccessfulQueryResult(mockData),
-    );
-
     renderApp();
 
     // Wait for facets to appear in the navbar

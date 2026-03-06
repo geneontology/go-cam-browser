@@ -7,7 +7,10 @@ export default function useQueryData() {
   return useQuery<IndexedGoCam[]>({
     queryKey: ["data"],
     queryFn: async () => {
-      return await ky(config.dataUrl).json();
+      // Ky in some environments (like jsdom) may fail to parse relative URLs
+      // without an explicit base. We ensure it's absolute.
+      const url = new URL(config.dataUrl, window.location.origin);
+      return await ky(url).json();
     },
     staleTime: Infinity,
   });
