@@ -5,13 +5,11 @@ import {
   type DocumentData,
   type FieldOptions,
 } from "flexsearch";
-import { config } from "../config.tsx";
-
-const ID_FIELD = config.fields.filter((f) => f.isId)[0];
-const SEARCH_FIELDS = config.fields.filter((f) => f.searchable);
+import type { FieldConfig } from "../types.ts";
 
 interface UseSearchOptions<TData> {
   data?: TData[];
+  fields: readonly FieldConfig<TData, keyof TData>[];
   query?: string;
 }
 
@@ -24,15 +22,24 @@ interface UseSearchResult<TData> {
 export default function useSearch<TData extends DocumentData>(
   options: UseSearchOptions<TData>,
 ) {
-  const { data, query } = options;
+  const { data, query, fields } = options;
   const [isIndexing, setIsIndexing] = useState<boolean>(false);
   const [results, setResults] = useState<TData[]>([]);
 
+  const idField = useMemo(() => fields.find((f) => f.isId), [fields]);
+  const searchFields = useMemo(
+    () => fields.filter((f) => f.searchable),
+    [fields],
+  );
+
   const index = useMemo(() => {
+    if (!idField) {
+      throw new Error("No ID field defined for search");
+    }
     return new Document({
-      id: ID_FIELD.field,
+      id: String(idField.field),
       store: true,
-      index: SEARCH_FIELDS.map(
+      index: searchFields.map(
         (f) =>
           ({
             field: String(f.field),
@@ -42,7 +49,7 @@ export default function useSearch<TData extends DocumentData>(
           }) as FieldOptions<TData>,
       ),
     });
-  }, []);
+  }, [idField, searchFields]);
 
   useEffect(() => {
     const reIndex = async () => {
