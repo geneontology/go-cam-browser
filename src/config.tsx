@@ -9,7 +9,7 @@ const goCamField = createFieldConfig<IndexedGoCam>();
 export const config = createConfig<IndexedGoCam>({
   title: "GO-CAM Browser",
   description: "Search and filter models by multiple criteria",
-  searchPlaceholder: "Search GO-CAMs by title or gene",
+  searchPlaceholder: "Search GO-CAMs by title, gene, or chemical",
   googleTagID: "G-MR617LRG6M",
   dataUrl: import.meta.env.BASE_URL + "data.json",
   headerLinks: [
@@ -115,6 +115,19 @@ export const config = createConfig<IndexedGoCam>({
       facetUrlKey: "gene",
       render: (gene_labels, gocam) => (
         <TermLinkList ids={gocam.enabled_by_gene_ids} labels={gene_labels} />
+      ),
+    }),
+    goCamField({
+      field: "chemical_labels",
+      label: "Chemicals",
+      searchable: true,
+      facet: "array",
+      facetHelp: `Select a chemical to filter models containing at least one
+        activity where the chemical is a participant (e.g. as a substrate or 
+        product) in the activity.`,
+      facetUrlKey: "chemical",
+      render: (chemical_labels, gocam) => (
+        <TermLinkList ids={gocam.chemical_ids} labels={chemical_labels} />
       ),
     }),
     goCamField({

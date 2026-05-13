@@ -1,6 +1,7 @@
 import React from "react";
 import BioregistryLink from "./BioregistryLink.tsx";
 import CommaSeparated from "./CommaSeparated.tsx";
+import NoData from "./NoData.tsx";
 
 interface TermLinkListProps {
   ids: string[];
@@ -9,6 +10,10 @@ interface TermLinkListProps {
 
 const TermLinkList: React.FC<TermLinkListProps> = ({ ids, labels }) => {
   const length = Math.min(ids.length, labels.length);
+  if (length === 0) {
+    return <NoData message="None" />;
+  }
+
   const terms = Array.from({ length }, (_, i) => ({
     id: ids[i],
     label: labels[i] || ids[i],

@@ -28,7 +28,7 @@ export const useUserSettings = create<UserSettingsState>()(
     }),
     {
       name: "GO_CAM_BROWSER_USER_SETTINGS",
-      version: 2,
+      version: 3,
     },
   ),
 );
