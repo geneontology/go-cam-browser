@@ -6,7 +6,7 @@ from typing import Annotated
 import typer
 from glom import glom
 from gocam.datamodel import Model
-from gocam.indexing.Indexer import Indexer
+from gocam.indexing.indexer import Indexer
 from gocam.translation import MinervaWrapper
 from gocam.utils import remove_species_code_suffix
 from rich.progress import track
@@ -60,6 +60,8 @@ def generate_search_documents(source: Path, destination: Path) -> None:
             [("label", remove_species_code_suffix)],
         ),
         "enabled_by_gene_ids": ("query_index.model_activity_enabled_by_genes", ["id"]),
+        "chemical_labels": ("query_index.model_chemical_terms", ["label"]),
+        "chemical_ids": ("query_index.model_chemical_terms", ["id"]),
         "occurs_in_rollup": ("query_index.model_activity_occurs_in_rollup", ["label"]),
         "occurs_in_term_labels": (
             "query_index.model_activity_occurs_in_terms",

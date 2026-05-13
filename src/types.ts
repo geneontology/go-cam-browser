@@ -12,6 +12,8 @@ export type IndexedGoCam = {
   number_of_strongly_connected_components?: number | null;
   enabled_by_gene_labels: string[];
   enabled_by_gene_ids: string[];
+  chemical_labels: string[];
+  chemical_ids: string[];
   occurs_in_rollup: string[];
   occurs_in_term_labels: string[];
   occurs_in_term_ids: string[];
