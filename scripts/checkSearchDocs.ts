@@ -1,7 +1,7 @@
 import process from "node:process";
 import { parseArgs } from "node:util";
 import { loadEnv } from "vite";
-import { indexedGoCamSchema } from "../src/indexedGoCamSchema.js";
+import { indexedGoCamSchema } from "../src/indexedGoCamSchema.ts";
 
 const maxReportedIssues = 20;
 
