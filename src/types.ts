@@ -1,28 +1,7 @@
 import type { ReactNode } from "react";
+import type { IndexedGoCam } from "./indexedGoCamSchema.ts";
 
-export type IndexedGoCam = {
-  id: string;
-  title: string;
-  date_modified: string;
-  status: string;
-  taxon?: string | null;
-  taxon_label?: string | null;
-  length_of_longest_causal_association_path?: number | null;
-  number_of_activities: number;
-  number_of_strongly_connected_components?: number | null;
-  enabled_by_gene_labels: string[];
-  enabled_by_gene_ids: string[];
-  chemical_labels: string[];
-  chemical_ids: string[];
-  occurs_in_rollup: string[];
-  occurs_in_term_labels: string[];
-  occurs_in_term_ids: string[];
-  part_of_rollup: string[];
-  part_of_term_labels: string[];
-  part_of_term_ids: string[];
-  provided_by_labels: string[];
-  provided_by_ids: string[];
-};
+export type { IndexedGoCam };
 
 export interface FieldConfig<TData, TField extends keyof TData = keyof TData> {
   field: TField;
@@ -50,7 +29,7 @@ export interface AppConfig<
   description: string;
   searchPlaceholder: string;
   googleTagID?: string;
-  dataUrl: string;
+  searchDocsUrl: string;
   headerLinks?: {
     label: string;
     href: string;

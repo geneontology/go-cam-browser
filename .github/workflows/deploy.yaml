@@ -36,6 +36,9 @@ jobs:
       - name: Test
         run: npm run test
 
+      - name: Check production search docs
+        run: npm run check:search-docs
+
       - name: Build
         run: npm run build
 

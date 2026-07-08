@@ -53,7 +53,7 @@ Checks code formatting without making changes
 - FlexSearch for client-side search functionality
 
 **Core Architecture:**
-This is a static single-page application that displays GO-CAM (Gene Ontology Causal Activity Models) data loaded from a JSON file. The app implements a faceted search interface with real-time filtering.
+This is a static single-page application that displays GO-CAM (Gene Ontology Causal Activity Models) search docs loaded from a JSON file. The app implements a faceted search interface with real-time filtering.
 
 **Key Patterns:**
 
@@ -70,7 +70,7 @@ This is a static single-page application that displays GO-CAM (Gene Ontology Cau
 
 **Data Flow:**
 
-1. JSON data loaded via TanStack Query (`src/hooks/useQueryData.ts`)
+1. Search docs JSON loaded via TanStack Query (`src/hooks/useQuerySearchDocs.ts`)
 2. Search indexing creates searchable subset
 3. Facets calculated from search results
 4. Filters applied to generate final result set
