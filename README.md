@@ -50,4 +50,6 @@ VITE_SEARCH_DOCS_URL=/local-search-docs.json
 
 `.env.local` is ignored by git, so it can be used for local development without changing the default project configuration. Files in `public` are served from the site root by Vite, so `public/local-search-docs.json` is available at `/local-search-docs.json` when running `npm run dev`.
 
-If the format of the search docs JSON file changes, be sure to update the `IndexedGoCam` type in `src/types.ts` and the field configurations in `src/config.tsx`.
+Run `npm run check:search-docs` to validate the production search docs URL against the app's Zod schema before deployment. This check defaults to Vite's `production` mode and also runs in the GitHub Pages deployment workflow. To validate another mode, pass it after `--`, for example `npm run check:search-docs -- --mode development`.
+
+If the format of the search docs JSON file changes, be sure to update the Zod schema in `src/indexedGoCamSchema.ts` and the field configurations in `src/config.tsx`.

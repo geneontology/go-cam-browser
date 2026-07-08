@@ -5,7 +5,7 @@ import NoData from "./NoData.tsx";
 
 interface TermLinkListProps {
   ids: string[];
-  labels: string[];
+  labels: (string | null)[];
 }
 
 const TermLinkList: React.FC<TermLinkListProps> = ({ ids, labels }) => {
