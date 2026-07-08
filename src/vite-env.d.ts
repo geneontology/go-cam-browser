@@ -5,6 +5,7 @@ interface ViteTypeOptions {
 
 interface ImportMetaEnv {
   readonly VITE_SEARCH_DOCS_URL: string;
+  readonly VITE_GOOGLE_TAG_ID?: string;
 }
 
 interface ImportMeta {

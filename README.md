@@ -22,6 +22,8 @@ This will start the server at `http://localhost:5173` by default. You can open t
 
 Basic configuration can be set in `src/config.tsx`. This file allows you to specify which fields of the indexed GO-CAM models to display by default, how to render them, which should be searchable, and which should be faceted.
 
+Google Analytics is enabled when `VITE_GOOGLE_TAG_ID` is set. The production env file sets the deployed tag ID; local development leaves it unset by default.
+
 ## Data
 
 The application is driven by a search docs JSON file containing indexed GO-CAM models. The URL for that file is controlled by the [Vite environment variable](https://vite.dev/guide/env-and-mode) `VITE_SEARCH_DOCS_URL`.
@@ -31,7 +33,7 @@ Default values are committed in env files:
 - `.env` is used for local development and points to the latest GO data release through (i.e. `https://current.geneontology.org`).
 - `.env.production` is used for production builds and points to a specific dated GO release URL (i.e. `https://release.geneontology.org/YYYY-MM-DD`).
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > After a new GO release is published, the minimum required change is to update the URL in `.env.production` to point to the new release.
 >
 > If the format of the search docs JSON file changed in the new GO release, the change to `.env.production` should be accompanied by corresponding application changes.

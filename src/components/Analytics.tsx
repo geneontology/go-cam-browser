@@ -4,7 +4,7 @@ import { config } from "../config.tsx";
 /**
  * Analytics component that sets up Google Analytics using the provided googleTagID.
  *
- * It only initializes analytics in production mode and if the googleTagID is set.
+ * It only initializes analytics if the googleTagID is set.
  *
  * Note: This component manually injects <script> tags into the document head to load Google
  *       Analytics. It does not rely on React 19's built-in <script> tag handling because that
@@ -15,10 +15,6 @@ import { config } from "../config.tsx";
  */
 const Analytics = () => {
   useEffect(() => {
-    if (import.meta.env.DEV) {
-      console.warn("Skipping analytics setup in development mode");
-      return;
-    }
     if (!config.googleTagID) {
       console.warn("Skipping analytics setup because googleTagID is not set");
       return;
