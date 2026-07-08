@@ -33,7 +33,7 @@ Default values are committed in env files:
 
 > [!IMPORTANT]  
 > After a new GO release is published, the minimum required change is to update the URL in `.env.production` to point to the new release.
-> 
+>
 > If the format of the search docs JSON file changed in the new GO release, the change to `.env.production` should be accompanied by corresponding application changes.
 
 To develop against a local search docs file, put the file in the `public` directory and override the URL in `.env.local`. For example:

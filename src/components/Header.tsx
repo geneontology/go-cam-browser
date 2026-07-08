@@ -2,6 +2,7 @@ import React from "react";
 import { Group } from "@mantine/core";
 import logoUrl from "../assets/go-logo.svg";
 import { config } from "../config.tsx";
+import GoRelease from "./GoRelease.tsx";
 import HeaderLinks from "./HeaderLinks.tsx";
 
 import classes from "./Header.module.css";
@@ -14,6 +15,9 @@ const Header: React.FC = () => {
       <Group visibleFrom="sm" gap="xl" ml="xl">
         <HeaderLinks />
       </Group>
+      <div className={classes.release}>
+        <GoRelease searchDocsUrl={config.searchDocsUrl} />
+      </div>
     </>
   );
 };
