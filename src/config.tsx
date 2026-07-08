@@ -11,7 +11,7 @@ export const config = createConfig<IndexedGoCam>({
   description: "Search and filter models by multiple criteria",
   searchPlaceholder: "Search GO-CAMs by title, gene, or chemical",
   googleTagID: "G-MR617LRG6M",
-  dataUrl: import.meta.env.BASE_URL + "data.json",
+  searchDocsUrl: import.meta.env.VITE_SEARCH_DOCS_URL,
   headerLinks: [
     {
       label: "GO-CAM Overview",

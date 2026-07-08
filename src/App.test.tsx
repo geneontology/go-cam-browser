@@ -66,7 +66,7 @@ const mockData: IndexedGoCam[] = [
 ];
 
 const server = setupServer(
-  http.get(config.dataUrl, () => {
+  http.get(config.searchDocsUrl, () => {
     return HttpResponse.json(mockData);
   }),
 );

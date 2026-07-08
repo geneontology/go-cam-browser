@@ -24,6 +24,30 @@ Basic configuration can be set in `src/config.tsx`. This file allows you to spec
 
 ## Data
 
-The application is driven by a JSON file containing indexed GO-CAM models. Currently, the file is served as a static file from this project's `public` directory. For more information on how this file is generated see additional documentation [here](data/README.md).
+The application is driven by a search docs JSON file containing indexed GO-CAM models. The URL for that file is controlled by the [Vite environment variable](https://vite.dev/guide/env-and-mode) `VITE_SEARCH_DOCS_URL`.
 
-If the format of this file changes, be sure to update the `IndexedGoCam` type in `src/types.ts` and the field configurations in `src/config.tsx`.
+Default values are committed in env files:
+
+- `.env` is used for local development and points to the latest GO data release through (i.e. `https://current.geneontology.org`).
+- `.env.production` is used for production builds and points to a specific dated GO release URL (i.e. `https://release.geneontology.org/YYYY-MM-DD`).
+
+> [!IMPORTANT]  
+> After a new GO release is published, the minimum required change is to update the URL in `.env.production` to point to the new release.
+> 
+> If the format of the search docs JSON file changed in the new GO release, the change to `.env.production` should be accompanied by corresponding application changes.
+
+To develop against a local search docs file, put the file in the `public` directory and override the URL in `.env.local`. For example:
+
+```bash
+cp /path/to/go-cam-browser-search-docs.json public/local-search-docs.json
+```
+
+Then create `.env.local`:
+
+```env
+VITE_SEARCH_DOCS_URL=/local-search-docs.json
+```
+
+`.env.local` is ignored by git, so it can be used for local development without changing the default project configuration. Files in `public` are served from the site root by Vite, so `public/local-search-docs.json` is available at `/local-search-docs.json` when running `npm run dev`.
+
+If the format of the search docs JSON file changes, be sure to update the `IndexedGoCam` type in `src/types.ts` and the field configurations in `src/config.tsx`.

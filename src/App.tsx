@@ -18,7 +18,7 @@ import useFacets from "./hooks/useFacets.ts";
 import useUserSettings from "./hooks/useUserSettings.ts";
 import Facet from "./components/Facet.tsx";
 import useSearch from "./hooks/useSearch.ts";
-import useQueryData from "./hooks/useQueryData.ts";
+import useQuerySearchDocs from "./hooks/useQuerySearchDocs.ts";
 import SearchInput from "./components/SearchInput.tsx";
 import Header from "./components/Header.tsx";
 import UserSettingsMenu from "./components/UserSettingsMenu.tsx";
@@ -39,7 +39,7 @@ function App() {
   const visibleFields = useUserSettings((state) => state.visibleFields);
   const { search, setSearch, filters, setFilters } = useUrlState();
 
-  const { isPending, isError, data, error } = useQueryData();
+  const { isPending, isError, data, error } = useQuerySearchDocs();
 
   const { results: searchResults, isIndexing } = useSearch({
     data: data,

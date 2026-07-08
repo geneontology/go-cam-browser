@@ -50,7 +50,7 @@ export interface AppConfig<
   description: string;
   searchPlaceholder: string;
   googleTagID?: string;
-  dataUrl: string;
+  searchDocsUrl: string;
   headerLinks?: {
     label: string;
     href: string;

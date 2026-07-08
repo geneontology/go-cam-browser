@@ -1,0 +1,4 @@
+# Keep this directory available for local search docs files without committing
+# them. Production and default development use URLs from Vite env files instead.
+*
+!.gitignore
